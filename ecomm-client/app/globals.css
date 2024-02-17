@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+      display: none;
+  }
+ /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+}
+}
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+} 
+
+.ant-typography{
+  margin: 0 !important ;
+}
+
+/* NAVBAR  START */
+.link-item .anticon{
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 5px;
+  color: grey;
+  transition: .2s all ease-in-out;
+}
+.link-item:hover{
+  color: black;
+}
+
+.search-input .ant-input-affix-wrapper{
+  width: 250px;
+}
+/* NAVBAR  END */
+
+
+
+
+/* HOME START  */
+.featured-card{
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s all ease-in-out;
+}
+.featured-img{
+  width: 250px;
+}
+.featured-img img{
+  width: 100%;
+  border-radius: 6px;
+}
+.featured-img .skt{
+  width: 250px !important;
+  height: 250px !important;
+
+}
+/* HOME END  */
+
+
+
+
+
+/* PAYMENT BILL START */
+
+.supermarket-bill{
+  padding: 20px 30px ;
+  padding-bottom: 100px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-start;
+  margin: auto;
+  max-width: 400px;
+  min-width: 400px;
+}
+
+.supermarket-bill h2{
+  margin: auto;
+}
+.store-info{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-content: center;
+  text-align: center;
+}
+.dot-line{
+  border-bottom: 1px dashed #424242;
+  margin: 0;
+}
+
+.invoice-head th{
+  border-bottom: 1px dashed #424242;
+  padding: 5px 0 ;
+  padding-bottom: 10px;
+}
+.invoice-table tbody tr:first-child td{
+  padding-top: 10px;
+}
+.invoice-total{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.invoice-total-tag{
+    font-size: 22px;
+    font-weight: bolder;
+}
+.invoice-total-price{
+  font-size: 22px;
+  font-weight: bolder;
+}
+
+
+.payment-section-wrapper{
+  display: flex;
+
+}
+.payment-button-wrapper{
+  width: 400px;
+  height: 200px;
+  background-color: #000;
+
+}
+
+.content{
+  margin-top: 200px;
+}
+
+/* PAYMENT BILL END */
