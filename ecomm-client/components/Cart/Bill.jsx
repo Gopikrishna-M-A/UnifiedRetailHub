@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 const Bill = ({ orderID, tableData, total, cartTotal }) => {
   const { data: session } = useSession()
   const [user, setUser] = useState(session?.user)
+  const [data,setData] = useState(tableData)
 
   return (
 <div className="supermarket-bill">
@@ -36,7 +37,7 @@ const Bill = ({ orderID, tableData, total, cartTotal }) => {
               </tr>
             </thead>
             <tbody className="invoice-body">
-              {tableData?.map((row, index) => (
+              {data?.map((row, index) => (
                 <tr key={index}>
                   <td>{row.item}</td>
                   <td>{row.rate.toFixed(2)}</td>

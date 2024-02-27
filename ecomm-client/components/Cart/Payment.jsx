@@ -5,7 +5,8 @@ import Bill from "./Bill";
 import Confetti from 'react-confetti'
 import { useCart } from '../../contexts/cartContext';
 import { useSession } from "next-auth/react";
- 
+import { redirect } from 'next/navigation'
+
 const SupermarketBill = ({ setCurrent }) => {
 
 
@@ -123,6 +124,9 @@ const SupermarketBill = ({ setCurrent }) => {
               setPaymentSuccess(true);
               emptyCart()
               openNotification()
+              setTimeout(() => {
+                window.location.reload(true);
+              }, 5000);
             }
           })
 

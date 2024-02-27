@@ -69,7 +69,7 @@ const PriceDetails = ({ setCurrent }) => {
           <Title level={5}>{`₹${(totalAmount - couponDiscount).toFixed(2)}`}</Title>
         </div>
       </div>
-      <Button onClick={onButtonClick} type="primary" size="large">
+      <Button onClick={onButtonClick} size="large">
         Place order
       </Button>
     </div>

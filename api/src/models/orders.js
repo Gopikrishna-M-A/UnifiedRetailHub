@@ -65,6 +65,10 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
       },
+      desc:{
+        type:String,
+        default:"Your order is confirmed and in processing. Thank you for your patience."
+      }
     },
   ],
   orderDate: {
@@ -76,12 +80,18 @@ const orderSchema = new mongoose.Schema({
   signature: String,
   method: String,
   orderNumber: {
-    type: Number,
+    type: String,
     required: true,
   },
-  phase: {
-    type: Number,
-    default:0
+  DeliverType:{
+    type:String,
+    enum:["Delivery","Pickup"],
+    default:"Delivery"
+  },
+  orderSource: {
+    type: String,
+    enum: ['ecommerce', 'pos'],
+    default: 'ecommerce',
   }
 });
 

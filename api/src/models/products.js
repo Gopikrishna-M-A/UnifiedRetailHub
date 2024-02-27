@@ -28,6 +28,9 @@ const productSchema = new mongoose.Schema({
   //   type: [String],
   //   default: [],
   // },
+  barcode: {
+    type: String,
+  },
   isFeatured: {
     type: Boolean,
     default: false,

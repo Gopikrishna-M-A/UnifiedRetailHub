@@ -18,6 +18,8 @@ import {
   CarFilled,
   EnvironmentFilled,
   StarFilled,
+  RedoOutlined,
+  CloseCircleFilled
 } from "@ant-design/icons";
 import OrderItems from "./OrderItems";
 import axios from "axios";
@@ -25,6 +27,16 @@ import Link from "next/link";
 import { useSession } from "next-auth/react"
 
 const { Title, Paragraph, Text } = Typography;
+
+const IconMapping = {
+  "Processing": <CheckCircleFilled />,
+  "Packed": <DropboxCircleFilled />,
+  "Shipped": <CarFilled />,
+  "Delivered": <EnvironmentFilled />,
+  "Completed": <StarFilled />,
+  "Cancelled": <CloseCircleFilled />,
+  "Refunded": <RedoOutlined />,
+};
 
 const customDot = (dot, { status, index }) => (
   <Popover
@@ -88,7 +100,6 @@ const page = ({ orderId }) => {
     }
   }, [CurrentOrderId]);
 
-  const phase = CurrentOrder?.orderStatus && CurrentOrder.phase;
 
   function convertDateFormat(inputDate) {
     const months = [
@@ -190,7 +201,7 @@ const page = ({ orderId }) => {
         <Breadcrumb
           items={[
             totalOrders > 0 && {
-              title: `#${CurrentOrder?.orderNumber}`,
+              title: `#${CurrentOrder?.OrderId}`,
             },
             totalOrders > 0 && {
               title: <Link href="/orders">History</Link>,
@@ -224,7 +235,7 @@ const page = ({ orderId }) => {
               <>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col w-2/3">
-                    <Title level={4}>Order #{CurrentOrder?.orderNumber} </Title>
+                    <Title level={4}> # {CurrentOrder?.OrderId}</Title>
                     <div className="flex justify-between">
                       <div className="flex flex-col gap-1">
                         <Paragraph type="secondary">Order</Paragraph>
@@ -246,108 +257,46 @@ const page = ({ orderId }) => {
                         <Paragraph>{formattedDate}</Paragraph>
                       </div>
                       <div className="flex flex-col">
-                        <Button type="primary" size="small">
+                        {/* <Button type="primary" size="small">
                           {CurrentOrder?.orderStatus &&
-                            CurrentOrder.orderStatus[phase].status}
-                        </Button>
+                            CurrentOrder.orderStatus[CurrentOrder.orderStatus.length - 1].status}
+                        </Button> */}
                       </div>
                     </div>
                   </div>
                   <div className=" w-20 h-20 bg-slate-300 rounded-md"></div>
                 </div>
 
-                <Steps
+                {/* <Steps
                   className="mt-8 mb-5"
-                  current={phase}
-                  // progressDot={customDot}
+                  current={CurrentOrder?.orderStatus?.length}
                   items={[
-                    {
-                      title: "Processing",
-                      icon: <CheckCircleFilled />,
-                    },
-                    {
-                      title: "Packed",
-                      icon: <DropboxCircleFilled />,
-                    },
-                    {
-                      title: "Shipped",
-                      icon: <CarFilled />,
-                    },
-                    {
-                      title: "Delivered",
-                      icon: <EnvironmentFilled />,
-                    },
-                    {
-                      title: "Completed",
-                      icon: <StarFilled />,
-                    },
+                    
+                    ...(CurrentOrder?.orderStatus?.map((status, index) => {
+                      return {
+                        title: status.status,
+                        icon: IconMapping[status.status],
+                      };
+                    }) || []),
                   ]}
-                />
+                /> */}
 
-                <Title level={5}>Track Details</Title>
+                <div className="mt-5 text-sm font-bold" >Track Details</div>
                 <Steps
                   className="mt-2.5 mb-5"
                   direction="vertical"
                   size="small"
-                  current={phase + 1}
+                  current={CurrentOrder?.orderStatus?.length}
                   items={[
-                    {
-                      title: "Order Confirmed",
-                      subTitle: convertDateFormat2(
-                        CurrentOrder.orderStatus &&
-                          CurrentOrder?.orderStatus[0].timestamp
-                      ),
-                      description:
-                        "The order has been successfully confirmed by our system",
-                    },
-                    {
-                      title: "Order Paid",
-                      ...(phase >= 0 && {
-                        subTitle: convertDateFormat2(
-                          CurrentOrder.orderStatus &&
-                            CurrentOrder?.orderStatus[0].timestamp
-                        ),
-                      }),
-                      ...(phase > 0 && {
-                        description: "Your payment has been received",
-                      }),
-                    },
-                    {
-                      title: "Order packed",
-                      ...(phase >= 1 && {
-                        subTitle: convertDateFormat2(
-                          CurrentOrder.orderStatus &&
-                            CurrentOrder?.orderStatus[1].timestamp
-                        ),
-                      }),
-                      ...(phase > 1 && {
-                        description: "All items from your order were packed",
-                      }),
-                    },
-                    {
-                      title: "Package send",
-                      ...(phase >= 2 && {
-                        subTitle: convertDateFormat2(
-                          CurrentOrder.orderStatus &&
-                            CurrentOrder?.orderStatus[2].timestamp
-                        ),
-                      }),
-                      ...(phase > 2 && {
-                        description: `Your package has been sent from our store to ${CurrentOrder?.shippingAddress?.street}`,
-                      }),
-                    },
-                    {
-                      title: "Package Delivered",
-                      ...(phase >= 3 && {
-                        subTitle: convertDateFormat2(
-                          CurrentOrder.orderStatus &&
-                            CurrentOrder?.orderStatus[3].timestamp
-                        ),
-                      }),
-                      ...(phase > 3 && {
-                        description: `Your package has been successfully delivered to ${CurrentOrder?.shippingAddress?.street}`,
-                      }),
-                    },
+
+                    ...(CurrentOrder?.orderStatus?.map((status, index) => {
+                      return {
+                        title: status.status,
+                        subTitle: convertDateFormat2(status.timestamp),
+                        description: status.desc,
+                      };
+                    }) || []),
+                    
                   ]}
                 />
               </>

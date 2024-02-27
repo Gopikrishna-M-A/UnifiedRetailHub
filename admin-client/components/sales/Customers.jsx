@@ -70,6 +70,7 @@ import axios from "axios";
 import Usercard from "./Usercard";
 
 function formatNumber(phoneNumber) {
+    if (!phoneNumber) return "";
     const formattedNumber = `+91 ${phoneNumber.slice(0, 3)} ${phoneNumber.slice(3, 6)} ${phoneNumber.slice(6)}`;
     return formattedNumber;
   }
@@ -86,11 +87,8 @@ export default function DataTableDemo() {
   useEffect(() => {
     axios.get(`${baseURL}/api/user`).then((res) => {
       setData(res.data);
-      console.log(res.data);
     });
-
   }, []);
-
 
   const columns = [
     {

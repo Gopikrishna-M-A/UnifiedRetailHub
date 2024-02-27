@@ -82,6 +82,7 @@ export default function DataTableDemo() {
   const [prodDesc, setProdDesc] = useState("");
   const [prodCat, setProdCat] = useState("");
   const [attributes, setAttributes] = useState([]);
+  const [barcode,setBarcode] = useState("")
   const [prodAttr, setProdAttr] = useState({});
   const [parentAttributes, setParentAttributes] = useState([]);
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -89,7 +90,6 @@ export default function DataTableDemo() {
   useEffect(() => {
     axios.get(`${baseURL}/api/products`).then((res) => {
       setData(res.data);
-      console.log(res.data);
     });
 
     axios.get(`${baseURL}/api/categories`).then((res) => {
@@ -286,6 +286,7 @@ export default function DataTableDemo() {
       price: prodPrice,
       category: prodCat,
       attributes: prodAttr,
+      barcode,
       images: ["product.jpg", "product.jpg", "product.jpg", "product.jpg"],
     };
 
@@ -327,6 +328,10 @@ export default function DataTableDemo() {
                     onChange={(e) => setProdPrice(e.target.value)}
                     placeholder="Item Price"
                   />
+                  <Input
+                    onChange={(e)=>setBarcode(e.target.value)}  
+                    placeholder="Item barcode"
+                  />
                   <Textarea
                     onChange={(e) => setProdDesc(e.target.value)}
                     placeholder="Item description"
@@ -340,8 +345,8 @@ export default function DataTableDemo() {
                       <SelectValue placeholder="Item Category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem value={category._id}>
+                      {categories.map((category,index) => (
+                        <SelectItem key={index} value={category._id}>
                           {category.name}
                         </SelectItem>
                       ))}

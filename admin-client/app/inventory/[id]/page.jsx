@@ -40,6 +40,7 @@ const page = ({ params }) => {
   const [category, setCategory] = useState("");
   const [attributes, setAttributes] = useState({});
   const [categories, setCategories] = useState([]);
+  const [barcode,setBarcode] = useState("")
   const [parentAttributes, setParentAttributes] = useState([]);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ const page = ({ params }) => {
       setPrice(res.data.price);
       setCategory(res.data?.category._id);
       setAttributes(res.data?.attributes);
+      setBarcode(res.data?.barcode)
     });
 
     axios.get(`${baseURL}/api/categories`).then((res) => {
@@ -92,7 +94,8 @@ const page = ({ params }) => {
       description,
       price,
       category,
-      attributes
+      attributes,
+      barcode
     }
     axios.patch(`${baseURL}/api/products/${product._id}`, data)
   }
@@ -154,6 +157,17 @@ const page = ({ params }) => {
                         onChange={(e) => setDescription(e.target.value)}
                       />
                     </div>
+                    <div className="flex gap-2 text-md my-2 items-center">
+                      <div className="text-md text-foreground font-bold w-24">
+                        Barcode
+                      </div>
+                      <Input
+                        className="text-md text-muted-foreground "
+                        value={barcode}
+                        onChange={(e) => setBarcode(e.target.value)}
+                      />
+                    </div>
+
                     <div className="flex gap-2 text-md my-2 items-center">
                       <div className="text-md text-foreground font-bold w-24">
                         Category

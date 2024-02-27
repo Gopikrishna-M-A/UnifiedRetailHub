@@ -16,7 +16,6 @@ export default function Page() {
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
-    console.log("tab changed", tab);
   }, [tab]);
 
   const handleTabChange = (num) => {

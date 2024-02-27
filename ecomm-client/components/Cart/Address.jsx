@@ -176,7 +176,7 @@ const Address = ({ setCurrent }) => {
         </Row>
 
         <Form.Item>
-          <Button size="large" block type="primary" htmlType="submit">
+          <Button size="large" block htmlType="submit">
             Continue to Payment
           </Button>
         </Form.Item>

@@ -17,6 +17,7 @@ import { Overview } from "../../components/dashboard/overview"
 import { RecentSales } from "../../components/dashboard/recent-sales"
 
 import Customers from "../../components/sales/customers"
+import Orders from "../../components/sales/Orders"
 
 
 
@@ -35,13 +36,13 @@ export default function Page() {
         <TabsList>
           <TabsTrigger value="Customers">Customers</TabsTrigger>
           <TabsTrigger value="orders" >orders</TabsTrigger>
-          <TabsTrigger value="Invoices" >Invoices</TabsTrigger>
+          {/* <TabsTrigger value="Invoices" >Invoices</TabsTrigger>
           <TabsTrigger value="payments-received" >payments received</TabsTrigger>
           <TabsTrigger value="packages" >packages</TabsTrigger>
           <TabsTrigger value="Shipments" >Shipments</TabsTrigger>
           <TabsTrigger value="Returns" >Returns</TabsTrigger>
-          {/* <TabsTrigger value="Credit-notes" >Credit notes</TabsTrigger> */}
-          <TabsTrigger value="Conflicts" >Conflicts</TabsTrigger>
+          <TabsTrigger value="Credit-notes" >Credit notes</TabsTrigger>
+          <TabsTrigger value="Conflicts" >Conflicts</TabsTrigger> */}
 
         </TabsList>
         <TabsContent value="Customers" className="space-y-4">
@@ -52,6 +53,7 @@ export default function Page() {
 
         <TabsContent value="orders" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Orders />
           </div>
         </TabsContent>
 

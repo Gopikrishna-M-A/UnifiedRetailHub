@@ -252,7 +252,6 @@ export default function DataTableDemo() {
         catInfo = parentCat;
       }
     }
-    console.log(parentAttributes);
   }, [catParent]);
 
   return (
@@ -290,8 +289,8 @@ export default function DataTableDemo() {
                       <SelectValue placeholder="Parent Category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {data.map((category) => (
-                        <SelectItem value={category._id}>
+                      {data.map((category,index) => (
+                        <SelectItem key={index} value={category._id}>
                           {category.name}
                         </SelectItem>
                       ))}
