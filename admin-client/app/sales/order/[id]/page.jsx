@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "../../../../components/ui/popover";
-import Customers from "../../../../components/sales/customers";
+import Customers from "../../../../components/sales/Customers";
 import Orders from "../../../../components/sales/Orders";
 import { cn } from "../../../../lib/utils";
 import { isSameDay, format, parseISO, set } from "date-fns";
