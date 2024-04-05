@@ -36,6 +36,8 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog";
+import { Separator } from "@/components/ui/separator";
+
 import {
   flexRender,
   getCoreRowModel,
@@ -45,8 +47,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -69,23 +73,107 @@ import Link from "next/link";
 import axios from "axios";
 import { set } from "date-fns";
 import ProductCard from "./ProductCard";
+import { PlusOutlined } from "@ant-design/icons";
+import { Modal, Upload } from "antd";
+
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 export default function DataTableDemo() {
   const [data, setData] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const [categories, setCategories] = useState([]);
+
+  const [goods, setGoods] = useState(true);
+  const [service, setService] = useState(false);
   const [prodName, setProdName] = useState("");
-  const [prodPrice, setProdPrice] = useState("");
-  const [prodDesc, setProdDesc] = useState("");
+  const [SKU, setSKU] = useState("");
+  const [unit, setUnit] = useState("");
   const [prodCat, setProdCat] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const [images,setImages]=useState([])
+
+  const [dimensions, setDimensions] = useState("");
+  const [weight, setWeight] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [brand, setBrand] = useState("");
+  const [UPC, setUPC] = useState("");
+  const [MPN, setMPN] = useState("");
+  const [EAN, setEAN] = useState("");
+  const [ISBN, setISBN] = useState("");
+
+  const [sellingPrice, setSellingPrice] = useState("");
+  const [costPrice, setCostPrice] = useState("");
+  const [MRP, setMRP] = useState("");
+  const [salesAccount, setSalesAccount] = useState("");
+  const [purchaseAccount, setPurchaseAccount] = useState("");
+  const [salesDescription, setSalesDescription] = useState("");
+  const [purchaseDescription, setPurchaseDescription] = useState("");
+  const [preferredVendor, setPreferredVendor] = useState("");
+
+  const [inventoryAccount, setInventoryAccount] = useState("");
+  const [openingStock, setOpeningStock] = useState("");
+  const [openingStockRatePerUnit, setOpeningStockRatePerUnit] = useState("");
+  const [reorderPoint, setReorderPoint] = useState("");
+
   const [attributes, setAttributes] = useState([]);
-  const [barcode,setBarcode] = useState("")
   const [prodAttr, setProdAttr] = useState({});
   const [parentAttributes, setParentAttributes] = useState([]);
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const uploadButton = (
+    <button
+      style={{
+        border: 0,
+        background: "none",
+      }}
+      type="button"
+    >
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </button>
+  );
+
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+
+  const handleGoodsChange = () => {
+    setGoods(true);
+    setService(false);
+  };
+
+  const handleServiceChange = () => {
+    setGoods(false);
+    setService(true);
+  };
 
   useEffect(() => {
     axios.get(`${baseURL}/api/products`).then((res) => {
@@ -167,10 +255,10 @@ export default function DataTableDemo() {
         // </HoverCard>
 
         <Dialog className="w-fit">
-        <DialogTrigger>{row.getValue("name")}</DialogTrigger>
-        <DialogContent className="flex justify-center items-center w-fit p-10">
-          <ProductCard product={row.original} />
-        </DialogContent>
+          <DialogTrigger>{row.getValue("name")}</DialogTrigger>
+          <DialogContent className="flex justify-center items-center w-fit p-10">
+            <ProductCard product={row.original} />
+          </DialogContent>
         </Dialog>
       ),
     },
@@ -279,15 +367,54 @@ export default function DataTableDemo() {
     }
   };
 
-  const addNewItem = () => {
+  const addNewItem = async() => {
+    const formData = new FormData();
+    fileList.map((file) => {
+      formData.append("file", file.originFileObj);
+    });
+    const res = await axios
+      .post("/api/aws", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    const dimensionsArray = dimensions.split('x')
     const requestBody = {
+      type: goods ? "Goods" : "Service",
       name: prodName,
-      description: prodDesc,
-      price: prodPrice,
+      SKU: SKU,
+      unit: unit,
       category: prodCat,
+      images:res.data, 
+      dimention: {
+        length: dimensionsArray[0] || '',
+        width: dimensionsArray[1] || '',
+        height: dimensionsArray[2] || '',
+        unit: 'cm',
+      },
+      weight: {
+        value: weight,
+        unit: 'gm',
+      },
+      manufacturer: manufacturer,
+      brand: brand,
+      MPN: MPN,
+      EAN: EAN,
+      ISBN: ISBN,
+      UPC:UPC,
+      sellingPrice: sellingPrice,
+      costPrice: costPrice,
+      MRP: MRP,
+      salesAccount: salesAccount,
+      description: salesDescription,
+      purchaseAccount: purchaseAccount,
+      purchaseDescription: purchaseDescription,
+      preferredVendor: preferredVendor,
+      inventoryAccount: inventoryAccount,
+      openingStock: openingStock,
+      openingStockRatePerUnit: openingStockRatePerUnit,
+      reorderPoint: reorderPoint,
       attributes: prodAttr,
-      barcode,
-      images: ["product.jpg", "product.jpg", "product.jpg", "product.jpg"],
     };
 
     axios
@@ -310,63 +437,308 @@ export default function DataTableDemo() {
             <DialogTrigger asChild>
               <Button> Add New Item</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-3xl overflow-y-scroll max-h-full">
               <DialogHeader>
-                <DialogTitle>Add Item</DialogTitle>
-                <DialogDescription>
+                <DialogTitle>New Item</DialogTitle>
+                {/* <DialogDescription>
                   Enter the details below to add a new Item.
-                </DialogDescription>
+                </DialogDescription> */}
               </DialogHeader>
               <div className="flex items-center space-x-2">
                 <div className="grid flex-1 gap-2">
-                  <Input
-                    onChange={(e) => setProdName(e.target.value)}
-                    placeholder="Item name"
-                  />
-                  <Input
-                    type="number"
-                    onChange={(e) => setProdPrice(e.target.value)}
-                    placeholder="Item Price"
-                  />
-                  <Input
-                    onChange={(e)=>setBarcode(e.target.value)}  
-                    placeholder="Item barcode"
-                  />
-                  <Textarea
-                    onChange={(e) => setProdDesc(e.target.value)}
-                    placeholder="Item description"
-                  />
-                  <Select
-                    onValueChange={(e) => {
-                      setProdCat(e);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Item Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category,index) => (
-                        <SelectItem key={index} value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Separator className="mb-5" />
 
-                  {/* {parentAttributes.map((attribute,index) => (
-                       <div key={index} className="flex gap-2 w-full items-center">
-                        <div className="w-24 capitalize text-sm text-foreground rounded-md bg-gray-100 px-3 py-2">{attribute}</div>
-                        <Input
-                          placeholder="Attribute value..."
-                          onChange={(e) => {
-                            setProdAttr((prevProdAttri) => ({
-                              ...prevProdAttri,
-                              [index]: e.target.value,
-                            }));
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-2 w-full">
+                      <div className="w-full flex gap-7">
+                        <div className="text-muted-foreground w-28">Type</div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            checked={goods}
+                            name="type"
+                            id="goods"
+                            onClick={handleGoodsChange}
+                          />
+                          <Label htmlFor="goods">Goods</Label>
+                          <Checkbox
+                            checked={service}
+                            name="type"
+                            id="service"
+                            onClick={handleServiceChange}
+                          />
+                          <Label htmlFor="service">Service</Label>
+                        </div>
+                      </div>
+
+                      <div className="w-full flex gap-10">
+                        <div className="text-muted-foreground w-32">Name</div>
+                        <Input onChange={(e) => setProdName(e.target.value)} />
+                      </div>
+
+                      <div className="w-full flex gap-10">
+                        <div className="text-muted-foreground w-32">SKU</div>
+                        <Input onChange={(e) => setSKU(e.target.value)} />
+                      </div>
+
+                      <div className="w-full flex gap-10">
+                        <div className="text-muted-foreground w-32">Unit</div>
+                        <Select
+                          onValueChange={(e) => {
+                            setUnit(e)
                           }}
-                        />
-                       </div>
-                      ))} */}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                              <SelectItem value='box'>box</SelectItem>
+                              <SelectItem value='cm'>cm</SelectItem>
+                              <SelectItem value='dz'>dz</SelectItem>
+                              <SelectItem value='ft'>ft</SelectItem>
+                              <SelectItem value='g'>g</SelectItem>
+                              <SelectItem value='in'>in</SelectItem>
+                              <SelectItem value='kg'>kg</SelectItem>
+                              <SelectItem value='km'>km</SelectItem>
+                              <SelectItem value='lb'>lb</SelectItem>
+                              <SelectItem value='mg'>mg</SelectItem>
+                              <SelectItem value='ml'>ml</SelectItem>
+                              <SelectItem value='m'>m</SelectItem>
+                              <SelectItem value='pcs'>pcs</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="w-full flex gap-10">
+                        <div className="text-muted-foreground w-32">
+                          Category
+                        </div>
+                        <Select
+                          onValueChange={(e) => {
+                            setProdCat(e);
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue  />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.map((category, index) => (
+                              <SelectItem key={index} value={category._id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <Label>
+                      Add Images
+                      <p className=" text-muted-foreground text-sm font-light">
+                        You can add up to 5 images, each not exceeding 5 MB.
+                      </p>
+                    </Label>
+                    <div className=" w-full py-5 p-3  rounded border flex ">
+                      <div className="text-muted-foreground">
+                        <Upload
+                          listType="picture-card"
+                          fileList={fileList}
+                          onChange={handleChange}
+                        >
+                          {fileList.length >= 5 ? null : uploadButton}
+                        </Upload>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-10"></div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                      Dimensions
+                      </div>
+                      <Input
+                        onChange={(e) => setDimensions(e.target.value)}
+                        placeholder="length x width x height"
+                      />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">Weight</div>
+                      <Input type='number' onChange={(e) => setWeight(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                        Manufacturer
+                      </div>
+                      <Input
+                        onChange={(e) => setManufacturer(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">Brand</div>
+                      <Input onChange={(e) => setBrand(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">UPC</div>
+                      <Input onChange={(e) => setUPC(e.target.value)} />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">MPN</div>
+                      <Input onChange={(e) => setMPN(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">EAN</div>
+                      <Input onChange={(e) => setEAN(e.target.value)} />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">ISBN</div>
+                      <Input onChange={(e) => setISBN(e.target.value)} />
+                    </div>
+                  </div>
+
+                  <div className="mt-10"></div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="flex items-center gap-2 mb-5">
+                        <Checkbox checked name="Sales" id="Sales" />
+                        <Label htmlFor="Sales">Sales Information</Label>
+                      </div>
+                    </div>
+                    <div className="flex w-full">
+                      <div className="flex items-center gap-2 mb-5">
+                        <Checkbox checked name="Sales" id="Sales" />
+                        <Label htmlFor="Sales">Purchase Information</Label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                        Selling Price
+                      </div>
+                      <Input
+                        onChange={(e) => setSellingPrice(e.target.value)}
+                        type="number"
+                      />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                        Cost Price
+                      </div>
+                      <Input
+                        onChange={(e) => setCostPrice(e.target.value)}
+                        type="number"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">MRP</div>
+                      <Input
+                        onChange={(e) => setMRP(e.target.value)}
+                        type="number"
+                      />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">Account</div>
+                      <Input
+                        onChange={(e) => setPurchaseAccount(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">Account</div>
+                      <Input
+                        onChange={(e) => setSalesAccount(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                        Description
+                      </div>
+                      <Textarea
+                        onChange={(e) => setPurchaseDescription(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full flex gap-10">
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                        Description
+                      </div>
+                      <Textarea
+                        onChange={(e) => setSalesDescription(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex w-full">
+                      <div className="text-muted-foreground w-40">
+                        Preferred Vendor
+                      </div>
+                      <Input
+                        onChange={(e) => setPreferredVendor(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-10"></div>
+
+                  <div className="flex items-center gap-2 mb-5">
+                    <Checkbox checked name="Sales" id="Sales" />
+                    <Label htmlFor="Sales">Track Inventory for this item</Label>
+                  </div>
+
+                  <div className="flex items-center">
+                    <div className="text-muted-foreground w-32">
+                      Inventory Account
+                    </div>
+                    <Input
+                      className="w-1/2"
+                      onChange={(e) => setInventoryAccount(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <div className="text-muted-foreground w-32">
+                      Opening Stock
+                    </div>
+                    <Input
+                      className="w-1/2"
+                      onChange={(e) => setOpeningStock(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <div className="text-muted-foreground w-32">
+                      Opening Stock Rate per Unit
+                    </div>
+                    <Input
+                      className="w-1/2"
+                      onChange={(e) =>
+                        setOpeningStockRatePerUnit(e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <div className="text-muted-foreground w-32">
+                      Reorder Point
+                    </div>
+                    <Input
+                      className="w-1/2"
+                      onChange={(e) => setReorderPoint(e.target.value)}
+                    />
+                  </div>
 
                   {parentAttributes.map((attribute, index) => (
                     <div key={index} className="flex gap-2 w-full items-center">
@@ -386,11 +758,13 @@ export default function DataTableDemo() {
                   ))}
                 </div>
               </div>
+
               <DialogFooter className="sm:justify-start">
                 <DialogClose asChild>
                   <Button
+                    size="lg"
+                    className="w-full"
                     type="button"
-                    variant="secondary"
                     onClick={addNewItem}
                   >
                     Add

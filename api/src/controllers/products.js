@@ -58,9 +58,12 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
     try {
       const productId = req.params.productId;
-      const updatedProduct = await Product.findByIdAndUpdate(productId, req.body, {
+      console.log("reqbody",req.body.data);
+      console.log("productId",productId);
+      const updatedProduct = await Product.findByIdAndUpdate(productId, req.body.data, {
         new: true,
       });
+      console.log("updatedProduct",updatedProduct);
       if (!updatedProduct) {
         return res.status(404).json({ error: 'Product not found' });
       }

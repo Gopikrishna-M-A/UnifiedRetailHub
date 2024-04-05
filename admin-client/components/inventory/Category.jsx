@@ -221,7 +221,7 @@ export default function DataTableDemo() {
     const requestBody = {
       name: catName,
       description: catDesc,
-      attributeKeys: attributes,
+      // attributeKeys: attributes,
     };
     if (catParent) {
       requestBody.parentCategory = catParent;
@@ -296,7 +296,7 @@ export default function DataTableDemo() {
                       ))}
                     </SelectContent>
                   </Select>
-                  <div className="flex w-full items-center space-x-2">
+                  {/* <div className="flex w-full items-center space-x-2">
                     <Input
                       value={attribute}
                       onChange={(e) => setAttribute(e.target.value)}
@@ -315,7 +315,7 @@ export default function DataTableDemo() {
                     >
                       Add
                     </Button>
-                  </div>
+                  </div> */}
                  
 
                   <div className="flex flex-wrap gap-2">

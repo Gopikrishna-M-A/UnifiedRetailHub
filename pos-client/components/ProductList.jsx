@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import Product from "./Product";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 import { useCart } from "../contexts/cartContext";
 import { toast } from "sonner"
@@ -13,6 +13,7 @@ const ProductList = () => {
   const [loading, setLoading] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef(null);
 
   const { addToCart } = useCart();
 
@@ -38,6 +39,18 @@ const ProductList = () => {
     };
     fetchProducts();
   }, []);
+
+  useEffect(()=>{
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        inputRef.current.focus();
+      }
+    }
+    document.addEventListener("keypress", handleKeyPress);
+    return () => {
+      document.removeEventListener("keypress", handleKeyPress);
+    };
+  },[])
 
   const clearSearch = () =>{
     setSearchQuery('')
@@ -73,6 +86,7 @@ const ProductList = () => {
     <div className=" w-[62%] h-screen-lg border-b border-r overflow-y-scroll pb-20">
       <div className="h-14 border-b">
         <Input
+          ref={inputRef}
           placeholder="Search products"
           className="h-full rounded-none focus-visible:ring-transparent border-0 shadow-none px-6"
           value={searchQuery}

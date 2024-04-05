@@ -20,7 +20,11 @@ import wishlistRoutes from './routes/wishlist.js';
 import promotionsRoutes from './routes/promotions.js'; 
 import bannersRoutes from './routes/banners.js'; 
 import staticPagesRoutes from './routes/staticPages.js'; 
-import analyticsRoutes from './routes/analytics.js'; 
+import analyticsRoutes from './routes/analytics.js';
+
+
+// import purchaseRoutes from './routes/purchase.js'; 
+import vendorRoutes from './routes/vendor.js'; 
 
 const app = express();
 
@@ -71,6 +75,10 @@ app.use('/api/static-pages', staticPagesRoutes)
 
 app.use('/api/analytics', analyticsRoutes)
 
+
+
+// app.use('/api/purchase',purchaseRoutes)
+app.use('/api/vendor',vendorRoutes)
 
 
 
