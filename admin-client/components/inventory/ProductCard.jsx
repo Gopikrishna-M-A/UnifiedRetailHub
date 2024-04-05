@@ -23,7 +23,7 @@ const ProductCard = ({ product }) => {
       
 
       <div className="w-full flex justify-center items-center ">
-        <img className="w-3/6" src={`/images/Products/${product.images[0]}`} alt="" />
+        <img className="w-3/6" src={`${product.images[0]}`} alt="" />
       </div>
       <div className="flex items-start justify-between">
         <div className="text-md font-bold">{product.name}</div>
