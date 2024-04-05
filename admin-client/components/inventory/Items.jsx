@@ -283,10 +283,10 @@ export default function DataTableDemo() {
       },
     },
     {
-      accessorKey: "price",
+      accessorKey: "sellingPrice",
       header: () => <div className="text-right">Price</div>,
       cell: ({ row }) => {
-        const price = parseFloat(row.getValue("price"));
+        const price = parseFloat(row.getValue("sellingPrice"));
 
         // Format the amount as a dollar amount
         const formatted = new Intl.NumberFormat("en-US", {
@@ -379,6 +379,7 @@ export default function DataTableDemo() {
         },
       })
     const dimensionsArray = dimensions.split('x')
+    console.log("image",res.data);
     const requestBody = {
       type: goods ? "Goods" : "Service",
       name: prodName,
