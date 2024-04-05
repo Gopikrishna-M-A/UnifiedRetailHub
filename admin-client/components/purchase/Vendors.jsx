@@ -36,7 +36,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "../ui/dialog";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "../ui/separator";
 
 import {
   flexRender,
@@ -47,8 +47,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 import { Button } from "../ui/button";
 import {

@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import BusinessNavOptions from "./navOptions/BusinessNavOptions";
 
 export function MainNav({ className = '', ...props }) {

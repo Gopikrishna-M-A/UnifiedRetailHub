@@ -7,21 +7,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDateRangePicker } from "@/components/dashboard/date-range-picker";
-import { Overview } from "@/components/dashboard/overview";
-import { RecentSales } from "@/components/dashboard/recent-sales";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../../components/ui/tabs";
+import { CalendarDateRangePicker } from "../../../../components/dashboard/date-range-picker";
+import { Overview } from "../../../../components/dashboard/overview";
+import { RecentSales } from "../../../../components/dashboard/recent-sales";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import Customers from "@/components/sales/customers";
-import Orders from "@/components/sales/Orders";
-import { cn } from "@/lib/utils";
+} from "../../../../components/ui/popover";
+import Customers from "../../../../components/sales/customers";
+import Orders from "../../../../components/sales/Orders";
+import { cn } from "../../../../lib/utils";
 import { isSameDay, format, parseISO, set } from "date-fns";
 import { useEffect, useState } from "react";
-import Bill from "@/components/sales/Bill";
+import Bill from "../../../../components/sales/Bill";
 import axios from "axios";
 import { Steps, Timeline } from "antd";
 

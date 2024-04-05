@@ -16,7 +16,7 @@ import { CalendarDateRangePicker } from "../../components/dashboard/date-range-p
 import { Overview } from "../../components/dashboard/overview"
 import { RecentSales } from "../../components/dashboard/recent-sales"
 
-import Customers from "../../components/sales/customers"
+import Customers from "../../components/sales/Customers"
 import Orders from "../../components/sales/Orders"
 
 

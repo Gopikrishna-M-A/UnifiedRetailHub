@@ -6,7 +6,7 @@ import { uploadFile } from 'react-s3';
 import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Modal, Upload } from 'antd';
-import { Button } from '@/components/ui/button';
+import { Button } from '../../components/ui/button';
 import axios from 'axios';
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {

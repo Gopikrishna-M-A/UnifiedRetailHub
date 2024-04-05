@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import {
   Dialog,
   DialogClose,
