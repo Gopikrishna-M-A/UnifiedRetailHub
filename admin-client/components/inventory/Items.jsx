@@ -99,7 +99,7 @@ export default function DataTableDemo() {
   const [service, setService] = useState(false);
   const [prodName, setProdName] = useState("");
   const [SKU, setSKU] = useState("");
-  const [unit, setUnit] = useState("");
+  const [unit, setUnit] = useState("pcs");
   const [prodCat, setProdCat] = useState("");
   const [fileList, setFileList] = useState([]);
   const [images,setImages]=useState([])
@@ -571,14 +571,14 @@ export default function DataTableDemo() {
                       <div className="w-full flex gap-10">
                         <div className="text-muted-foreground w-32">Unit</div>
                         <Select
-                          defaultValue="pcs"
+                          
                           value={unit}
                           onValueChange={(e) => {
                             setUnit(e)
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue/>
                           </SelectTrigger>
                           <SelectContent>
                               <SelectItem value='box'>box</SelectItem>

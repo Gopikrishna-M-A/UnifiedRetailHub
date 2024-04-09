@@ -66,7 +66,7 @@ const ProductList = () => {
       if (isBarcode) {
         // If the query is a barcode (consists of numbers), filter by barcode
 
-        const pro = products.find((product)=>product.barcode == query)
+        const pro = products.find((product)=>product.UPC == query)
 
         if(pro){
           addToCart(pro)
