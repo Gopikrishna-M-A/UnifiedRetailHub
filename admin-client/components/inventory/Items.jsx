@@ -474,8 +474,15 @@ export default function DataTableDemo() {
     axios
       .post(`${baseURL}/api/products`, requestBody)
       .then((res) => {
-        console.log(res.data);
-        setData([...data, res.data]);
+        setGoods(true);
+        setProdName('');
+        setUnit('');
+        setProdCat('');
+        setWeight('')
+        setUPC('');
+        setSellingPrice('');
+        setCostPrice('');
+        setMRP('');
       })
       .catch((error) => {
         console.error("Error adding product:", error);
