@@ -91,6 +91,8 @@ export default function DataTableDemo() {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const [copyItem,setCopyItem] = useState('')
+
   const [categories, setCategories] = useState([]);
 
   const [goods, setGoods] = useState(true);
@@ -175,6 +177,8 @@ export default function DataTableDemo() {
     setService(true);
   };
 
+
+
   useEffect(() => {
     axios.get(`${baseURL}/api/products`).then((res) => {
       setData(res.data);
@@ -208,6 +212,54 @@ export default function DataTableDemo() {
     }
   }, [prodCat]);
 
+
+  useEffect(() => {
+
+    const updateCopyItem = async() => {
+      const res = await axios.get(`${baseURL}/api/products/${copyItem}`)
+      const product = res.data
+      console.log("product",product);
+      
+       // setFileList(product.images)
+       setGoods(product.type === "Goods");
+       setService(product.type === "Service");
+       setProdName(product.name);
+       setUnit(product.unit);
+       setProdCat(product.category._id);
+       // setImages(imgs);
+      //  setDimensions(`${product.dimention.length}x${product.dimention.width}x${product.dimention.height}`);
+       setWeight(product.weight.value)
+      //  setManufacturer(product.manufacturer);
+      //  setBrand(product.brand);
+      //  setMPN(product.MPN);
+      //  setEAN(product.EAN);
+      //  setISBN(product.ISBN);
+       setUPC(product.UPC);
+       setSellingPrice(product.sellingPrice);
+       setCostPrice(product.costPrice);
+       setMRP(product.MRP);
+      //  setSalesAccount(product.salesAccount);
+      //  setSalesDescription(product.description);
+      //  setPurchaseAccount(product.purchaseAccount);
+      //  setPurchaseDescription(product.purchaseDescription);
+      //  setPreferredVendor(product.preferredVendor);
+ 
+      //  setInventoryAccount(product.inventoryAccount);
+      //  setOpeningStock(product.openingStock);
+      //  setOpeningStockRatePerUnit(product.openingStockRatePerUnit);
+      //  setReorderPoint(product.reorderPoint);
+ 
+      //  setAttributes(product.attributes);
+    }
+
+    if (copyItem){
+    updateCopyItem()
+    }
+     
+
+  }, [copyItem]);
+
+
   const columns = [
     {
       id: "select",
@@ -238,6 +290,7 @@ export default function DataTableDemo() {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className=' capitalize'
           >
             Name
             <CaretSortIcon className="ml-2 h-4 w-4" />
@@ -417,7 +470,7 @@ export default function DataTableDemo() {
       reorderPoint: reorderPoint,
       attributes: prodAttr,
     };
-
+    console.log("requestBody",requestBody);
     axios
       .post(`${baseURL}/api/products`, requestBody)
       .then((res) => {
@@ -451,6 +504,33 @@ export default function DataTableDemo() {
 
                   <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2 w-full">
+
+                    <div className="w-full flex gap-10">
+                        <div className="text-muted-foreground w-32">Copy Product</div>
+                    <Select
+                          value={copyItem}
+                          onValueChange={(e) => {
+                            setCopyItem(e)
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                          {data
+                            .slice() // Create a shallow copy of the array to avoid mutating the original
+                            .sort((a, b) => a.name.localeCompare(b.name)) // Sort the array based on the 'name' property
+                            .map((product) => (
+                              <SelectItem  key={product._id} value={product._id}>
+                                {product.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+
+                    </div>
+                      
+
                       <div className="w-full flex gap-7">
                         <div className="text-muted-foreground w-28">Type</div>
                         <div className="flex items-center gap-2">
@@ -473,17 +553,19 @@ export default function DataTableDemo() {
 
                       <div className="w-full flex gap-10">
                         <div className="text-muted-foreground w-32">Name</div>
-                        <Input onChange={(e) => setProdName(e.target.value)} />
+                        <Input value={prodName} onChange={(e) => setProdName(e.target.value)} />
                       </div>
 
                       <div className="w-full flex gap-10">
                         <div className="text-muted-foreground w-32">SKU</div>
-                        <Input onChange={(e) => setSKU(e.target.value)} />
+                        <Input value={SKU} onChange={(e) => setSKU(e.target.value)} />
                       </div>
 
                       <div className="w-full flex gap-10">
                         <div className="text-muted-foreground w-32">Unit</div>
                         <Select
+                          defaultValue="pcs"
+                          value={unit}
                           onValueChange={(e) => {
                             setUnit(e)
                           }}
@@ -514,6 +596,7 @@ export default function DataTableDemo() {
                           Category
                         </div>
                         <Select
+                        value={prodCat}
                           onValueChange={(e) => {
                             setProdCat(e);
                           }}
@@ -543,6 +626,7 @@ export default function DataTableDemo() {
                           listType="picture-card"
                           fileList={fileList}
                           onChange={handleChange}
+                          multiple={true}
                         >
                           {fileList.length >= 5 ? null : uploadButton}
                         </Upload>
@@ -558,13 +642,14 @@ export default function DataTableDemo() {
                       Dimensions
                       </div>
                       <Input
+                        value={dimensions}
                         onChange={(e) => setDimensions(e.target.value)}
                         placeholder="length x width x height"
                       />
                     </div>
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">Weight</div>
-                      <Input type='number' onChange={(e) => setWeight(e.target.value)} />
+                      <Input value={weight} type='number' onChange={(e) => setWeight(e.target.value)} />
                     </div>
                   </div>
 
@@ -574,34 +659,35 @@ export default function DataTableDemo() {
                         Manufacturer
                       </div>
                       <Input
+                      value={manufacturer}
                         onChange={(e) => setManufacturer(e.target.value)}
                       />
                     </div>
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">Brand</div>
-                      <Input onChange={(e) => setBrand(e.target.value)} />
+                      <Input  value={brand} onChange={(e) => setBrand(e.target.value)} />
                     </div>
                   </div>
 
                   <div className="w-full flex gap-10">
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">UPC</div>
-                      <Input onChange={(e) => setUPC(e.target.value)} />
+                      <Input value={UPC} onChange={(e) => setUPC(e.target.value)} />
                     </div>
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">MPN</div>
-                      <Input onChange={(e) => setMPN(e.target.value)} />
+                      <Input   value={MPN} onChange={(e) => setMPN(e.target.value)} />
                     </div>
                   </div>
 
                   <div className="w-full flex gap-10">
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">EAN</div>
-                      <Input onChange={(e) => setEAN(e.target.value)} />
+                      <Input  value={EAN} onChange={(e) => setEAN(e.target.value)} />
                     </div>
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">ISBN</div>
-                      <Input onChange={(e) => setISBN(e.target.value)} />
+                      <Input value={ISBN} onChange={(e) => setISBN(e.target.value)} />
                     </div>
                   </div>
 
@@ -628,6 +714,7 @@ export default function DataTableDemo() {
                         Selling Price
                       </div>
                       <Input
+                       value={sellingPrice}
                         onChange={(e) => setSellingPrice(e.target.value)}
                         type="number"
                       />
@@ -637,6 +724,7 @@ export default function DataTableDemo() {
                         Cost Price
                       </div>
                       <Input
+                      value={costPrice}
                         onChange={(e) => setCostPrice(e.target.value)}
                         type="number"
                       />
@@ -647,6 +735,7 @@ export default function DataTableDemo() {
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">MRP</div>
                       <Input
+                       value={MRP}
                         onChange={(e) => setMRP(e.target.value)}
                         type="number"
                       />
@@ -654,6 +743,7 @@ export default function DataTableDemo() {
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">Account</div>
                       <Input
+                       value={purchaseAccount}
                         onChange={(e) => setPurchaseAccount(e.target.value)}
                       />
                     </div>
@@ -663,6 +753,7 @@ export default function DataTableDemo() {
                     <div className="flex w-full">
                       <div className="text-muted-foreground w-40">Account</div>
                       <Input
+                         value={salesAccount}
                         onChange={(e) => setSalesAccount(e.target.value)}
                       />
                     </div>
@@ -671,6 +762,7 @@ export default function DataTableDemo() {
                         Description
                       </div>
                       <Textarea
+                       value={purchaseDescription}
                         onChange={(e) => setPurchaseDescription(e.target.value)}
                       />
                     </div>
@@ -682,6 +774,7 @@ export default function DataTableDemo() {
                         Description
                       </div>
                       <Textarea
+                       value={salesDescription}
                         onChange={(e) => setSalesDescription(e.target.value)}
                       />
                     </div>
@@ -690,6 +783,7 @@ export default function DataTableDemo() {
                         Preferred Vendor
                       </div>
                       <Input
+                       value={preferredVendor}
                         onChange={(e) => setPreferredVendor(e.target.value)}
                       />
                     </div>
@@ -707,6 +801,7 @@ export default function DataTableDemo() {
                       Inventory Account
                     </div>
                     <Input
+                      value={inventoryAccount}
                       className="w-1/2"
                       onChange={(e) => setInventoryAccount(e.target.value)}
                     />
@@ -716,6 +811,7 @@ export default function DataTableDemo() {
                       Opening Stock
                     </div>
                     <Input
+                    value={openingStock}
                       className="w-1/2"
                       onChange={(e) => setOpeningStock(e.target.value)}
                     />
@@ -725,6 +821,7 @@ export default function DataTableDemo() {
                       Opening Stock Rate per Unit
                     </div>
                     <Input
+                     value={openingStockRatePerUnit}
                       className="w-1/2"
                       onChange={(e) =>
                         setOpeningStockRatePerUnit(e.target.value)

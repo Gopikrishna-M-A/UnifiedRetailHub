@@ -17,6 +17,7 @@ import { Overview } from "../../components/dashboard/overview";
 import { RecentSales } from "../../components/dashboard/recent-sales";
 
 import Vendors from '../../components/purchase/Vendors'
+import OrderManagement from '../../components/purchase/OrderManagement'
 
 export default function Page() {
   return (
@@ -42,11 +43,13 @@ export default function Page() {
           </div>
         </TabsContent>
 
-        {/* <TabsContent value="Vendors" className="space-y-4">
+
+        <TabsContent value="order-management" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <OrderManagement />
           </div>
         </TabsContent>
-
+    {/* 
         <TabsContent value="Vendors" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
           </div>``

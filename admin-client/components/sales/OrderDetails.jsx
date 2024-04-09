@@ -9,11 +9,11 @@ const PriceDetails = ({ products, order }) => {
     const priceDetails = products?.map((cartItem) => (
         <div key={cartItem.product._id} className="flex justify-between text-sm text-muted-foreground">
           <p style={{width:"70%"}} type="secondary">{`${cartItem.quantity} x ${cartItem.product.name}`}</p>
-          <p>{`₹${calculateTotalPrice(cartItem.quantity, cartItem.product.price).toFixed(2)}`}</p>
+          <p>{`₹${calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice).toFixed(2)}`}</p>
         </div>
       ));
     const totalAmount = products?.reduce(
-        (total, cartItem) => total + calculateTotalPrice(cartItem.quantity, cartItem.product.price),
+        (total, cartItem) => total + calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice),
         0
     );
     const couponDiscount = totalAmount > 25 ? 10 : 0 // Assuming a fixed coupon discount for this example

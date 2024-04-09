@@ -82,7 +82,7 @@ const Cart = () => {
     );
     setProducts(uniqueProducts);
     setTotal(
-      cart.products.reduce((total, product) => total + product.price, 0)
+      cart.products.reduce((total, product) => total + product.sellingPrice, 0)
     );
     setLocalCarts(getAllCartsFromLocalStorage());
   };
@@ -188,7 +188,7 @@ const Cart = () => {
     return products.map(product => ({
       product: product.product._id,  // Assuming each product has an '_id' property
       quantity: product.quantity,  // You can set the quantity based on your requirements
-      price: product.product.price,
+      price: product.product.sellingPrice,
     }));
   }
 
@@ -342,7 +342,7 @@ const Cart = () => {
                             <td className="text-right">
                               {formatPrice(
                                 item.cart.products.reduce(
-                                  (total, product) => total + product.price,
+                                  (total, product) => total + product.sellingPrice,
                                   0
                                 )
                               )}

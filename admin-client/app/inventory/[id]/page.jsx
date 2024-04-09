@@ -603,7 +603,7 @@ const page = ({ params }) => {
                         Inventory Account
                       </div>
                       <Input
-                        value={preferredVendor}
+                        value={inventoryAccount}
                         className="w-1/2"
                         onChange={(e) => setInventoryAccount(e.target.value)}
                       />
