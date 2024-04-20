@@ -3,7 +3,7 @@ import Navbar from "../components/Utils/Navbar";
 import Footer from "../components/Utils/Footer";
 import { CartProvider } from "../contexts/cartContext";
 import { WishlistProvider } from "../contexts/wishlistContext";
-import { AnalyticsProvider } from '../contexts/AnalyticsContext'
+import { AnalyticsProvider } from '../contexts/analyticsContext'
 import { ConfigProvider } from 'antd';
 import { getServerSession } from "next-auth/next";
 import { options } from "../app/api/auth/[...nextauth]/options";
