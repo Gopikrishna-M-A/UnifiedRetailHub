@@ -1,4 +1,5 @@
 "use client";
+import { downloadInvoice } from "../../lib/invoice";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -181,7 +182,7 @@ const page = ({ orderId }) => {
   const formattedDate = convertDateFormat(inputDateString);
 
   return (
-    <div className="px-10 py-2.5 ">
+    <div className="px-10 py-2.5 min-h-96">
       <div className="">
         <div className="flex justify-between">
           <div className="flex items-center">
@@ -193,6 +194,7 @@ const page = ({ orderId }) => {
             <Button
               disabled={totalOrders < 1 ? true : false}
               icon={<FilePdfOutlined />}
+              onClick={()=>downloadInvoice(CurrentOrder)}
             >
               Download Invoice
             </Button>
@@ -283,7 +285,7 @@ const page = ({ orderId }) => {
 
                 <div className="mt-5 text-sm font-bold" >Track Details</div>
                 <Steps
-                  className="mt-2.5 mb-5"
+                  className="mt-2.5 mb-5 "
                   direction="vertical"
                   size="small"
                   current={CurrentOrder?.orderStatus?.length}
@@ -303,7 +305,7 @@ const page = ({ orderId }) => {
             )}
           </div>
           {totalOrders > 0 && (
-            <div className="w-1/3 bg-white rounded-md border mt-8 py-2.5 px-5 ">
+            <div className="w-1/3 h-fit bg-white rounded-md border mt-8 py-2.5 px-5 ">
               <Title level={4}>Inside Package</Title>
               <OrderItems products={CurrentOrderProducts} />
               <Divider />

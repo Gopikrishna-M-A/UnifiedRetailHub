@@ -4,7 +4,7 @@ import {
   MailOutlined,
   SortAscendingOutlined,
 } from "@ant-design/icons";
-import { Typography, Menu, Slider, Select } from "antd";
+import { Typography, Menu, Slider, Select, Empty } from "antd";
 import ProductCard from "./ProductCard";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'
@@ -24,13 +24,14 @@ const handleChange = (value) => {
   console.log(`selected ${value}`);
 };
 
-const ProductCategory = ({ id, products, categories }) => {
+const ProductCategory = ({ id, products, categories, allP }) => {
   const router = useRouter()
   const [category, setCategory] = useState(id);
   const [allProducts, setAllProducts] = useState([]);
   const [categoryProducts, setCategoryProducts] = useState([]);
+  const [menuKey,setMenuKey] = useState('')
 
-  console.log(products);
+  // console.log(products);
 
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
@@ -45,7 +46,7 @@ const ProductCategory = ({ id, products, categories }) => {
         ? product.category._id === category
         : true;
       const isPriceInRange =
-        product.price >= minPrice && product.price <= maxPrice;
+        product.sellingPrice >= minPrice && product.sellingPrice <= maxPrice;
       return isCategoryMatch && isPriceInRange;
     });
 
@@ -69,12 +70,12 @@ const ProductCategory = ({ id, products, categories }) => {
   };
 
   const items = [
-    getItem("Favorites", "sub1", <MailOutlined />, [
-      getItem("All Products", "1"),
-      getItem("Current Promotions", "2"),
-      getItem("New Products", "3"),
-      getItem("Best Sellers", "4"),
-      getItem("Worst Sellers", "5"),
+      getItem("Favorites", "sub1", <MailOutlined />, [
+      getItem("All Products", 1),
+      getItem("Current Promotions", 2),
+      getItem("New Products", 3),
+      getItem("Best Sellers", 4),
+      getItem("Worst Sellers", 5),
     ]),
     getItem(
       "Filters",
@@ -130,14 +131,19 @@ const ProductCategory = ({ id, products, categories }) => {
         {/* <Title level={5}>Products</Title> */}
         <Menu
           onClick={({ key, keyPath, domEvent }) => {
+            setMenuKey(key)
+            if(key == 1){
+              router.push("/products");
+            }
             if (key.length > 10 ) {
-              // changeCategory(key);
-              setCategory(key);
+              
+              changeCategory(key);
+              // setCategory(key);
             }
           }}
        
 
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={[menuKey]}
           defaultOpenKeys={["sub1"]}
           mode="inline"
           items={items}
@@ -145,7 +151,7 @@ const ProductCategory = ({ id, products, categories }) => {
       </div>
       <div className=" w-full lg:w-3/4 h-screen overflow-y-auto lg:px-5 lg:py-2 lg:pr-0 no-scrollbar lg:pb-24 pb-24 flex flex-col ">
         <div className="flex justify-between mb-4">
-          <Title level={4}>{categoryProducts[0]?.category?.name}</Title>
+          <Title level={4}>{allP ? 'All Products' : categoryProducts[0]?.category?.name}</Title>
           <div className="flex gap-1">
             <SortAscendingOutlined />
             <Select
@@ -162,6 +168,7 @@ const ProductCategory = ({ id, products, categories }) => {
           </div>
         </div>
         <div className="flex flex-wrap gap-5 justify-center lg:justify-normal">
+          {!categoryProducts.length && <div className="w-full h-full flex justify-center items-center"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Oops! It seems this category is currently empty. Check back later for exciting new products!"} /></div>}
           {categoryProducts.map((product) => (
              <ProductCard key={product._id} product={product} />
             ))}

@@ -6,7 +6,9 @@ import { options } from '../../api/auth/[...nextauth]/options';
 const page = async({params}) => {
 
   return (
-    <OrderPage orderId={params.orderId}/>
+    <div className='min-h-96'>
+      <OrderPage orderId={params.orderId}/>
+    </div>
   )
 }
 

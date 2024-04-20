@@ -64,41 +64,14 @@ const Home = ({ categories }) => {
 
       {/* BANNER SECTION */}
 
-      {/* <div className="flex banner w-full justify-between my-2.5">
-        <div className="w-full">
+      <div className="flex banner w-full justify-between my-2.5">
+        <div className="w-full ">
           <Carousel className="carousel" autoplay>
-            <div>
+            <div className=" h-96 ">
               <Image
                 width={816}
                 height={320}
-                src="/images/Banner/1.png"
-                alt="Banner Image"
-                className="w-full"
-              />
-            </div>
-            <div>
-              <Image
-                width={816}
-                height={320}
-                src="/images/Banner/2.png"
-                alt="Banner Image"
-                className="w-full"
-              />
-            </div>
-            <div>
-              <Image
-                width={816}
-                height={320}
-                src="/images/Banner/3.png"
-                alt="Banner Image"
-                className="w-full"
-              />
-            </div>
-            <div>
-              <Image
-                width={816}
-                height={320}
-                src="/images/Banner/4.png"
+                src="/images/Banner/fresh.jpg"
                 alt="Banner Image"
                 className="w-full"
               />
@@ -106,29 +79,8 @@ const Home = ({ categories }) => {
           </Carousel>
         </div>
 
-        <div className="w-2/6">
-          <Carousel className="carousel" autoplay>
-            <div>
-            <Image
-             width={100}
-             height={100}
-                src="/images/Banner/5.png"
-                alt="Image 1"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              />
-            </div>
-            <div>
-              <h3 style={contentStyle}>2</h3>
-            </div>
-            <div>
-              <h3 style={contentStyle}>3</h3>
-            </div>
-            <div>
-              <h3 style={contentStyle}>4</h3>
-            </div>
-          </Carousel>
-        </div> 
-      </div> */}
+  
+      </div>
 
       {/* BROWSE BY CATEGORY SECTION */}
       <div className="flex-col my-2.5 mt-10 gap-1">
@@ -140,7 +92,7 @@ const Home = ({ categories }) => {
         </div>
 
         <div className="flex flex-wrap  gap-5 lg:gap-2 mt-2.5 py-2.5 px-2.5 ">
-          {categories.map((category) => {
+          {categories.map((category,index) => {
             return <CategoryCard key={category._id} category={category} />;
           })}
         </div>

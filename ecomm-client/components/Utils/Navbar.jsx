@@ -81,7 +81,7 @@ const Navbar = () => {
     <>
       <nav className="sticky top-0 z-50 w-screen flex items-center justify-between p-5 border-b bg-white">
         <Link className="font-bold text-2xl" href="/">
-          <Title level={3}>Mart</Title>
+          <div className="bg-sky-600 px-3 py-1 rounded text-white font-bold text-lg">Maliakkal Stores</div>
         </Link>
 
         <Search

@@ -17,8 +17,10 @@ const Cart = ({ setCurrent }) => {
     console.log(`checked = ${e.target.checked}`);
   };
 
+
+
   return (
-    <div className=" my-2.5 flex gap-12 justify-center">
+    <div className=" my-2.5 flex gap-12 justify-center min-h-96">
       <div className="w-1/2 flex flex-col gap-2">
         <div className="flex mb-2.4 justify-between ">
           <div className="flex gap-2">

@@ -1,6 +1,6 @@
 import React from "react";
-import Image from "next/image";
-import { Typography } from "antd";
+// import Image from "next/image";
+import { Typography, Image } from "antd";
 const { Text } = Typography;
 
 const OrderItems = ({ products }) => {
@@ -10,10 +10,11 @@ const OrderItems = ({ products }) => {
         <div key={product._id} className="flex gap-3">
           <div>
             <Image
+              preview={false}
               alt="Product Image"
               width={70}
               height={70}
-              src={"/images/Products/" + product.product.images[0]}
+              src={product.product.images[0]}
             />
           </div>
           <div>

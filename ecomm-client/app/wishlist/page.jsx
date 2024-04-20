@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { List, Button, Card, Modal, Space, Typography } from "antd";
+import { List, Button, Card, Modal, Space, Typography, Empty } from "antd";
 import { DeleteOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import WishlistCard from "../../components/Wishlist/WishlistCard";
 import { useWishlist } from "@/contexts/wishlistContext";
@@ -31,8 +31,10 @@ const Wishlist = () => {
 
   return (
     <div className="px-5 py-5">
-      <Title level={3}>Wishlist</Title>
-      <div className="flex flex-wrap gap-5 mt-5">
+      <div className="text-xl font-medium">Wishlist</div>
+      <div className="flex flex-wrap gap-5 mt-5 min-h-96">
+        {!wishlist.length && <div className="w-full h-full flex justify-center items-center"><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={"Your wishlist is empty."} /></div>}
+
         {wishlist?.map((item) => (
           <WishlistCard product={item} handleRemoveItem={handleRemoveItem} handleAddToCart={handleAddToCart} />
         ))}

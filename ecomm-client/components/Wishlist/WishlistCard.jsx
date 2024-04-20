@@ -4,6 +4,7 @@ import { HeartOutlined, HeartFilled } from "@ant-design/icons";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import axios from "axios";
+import { useWishlist } from "@/contexts/wishlistContext";
 
 import { useCart } from '../../contexts/cartContext';
 
@@ -12,6 +13,7 @@ const { Title, Text, Paragraph } = Typography;
 const WishlistCard = ({ product }) => {
   const { addToCart } = useCart();
   const { push } = useRouter();
+  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   
   const handleCart = async() => {
     if (!user) {
@@ -27,10 +29,10 @@ const WishlistCard = ({ product }) => {
 
   return (
     <div className="w-80 border rounded-md p-2.5 relative flex-col gap-1">
-      <HeartOutlined className="absolute top-5 right-5 cursor-pointer "/>
+      <HeartFilled onClick={()=>removeFromWishlist(product._id)} className="absolute top-5 right-5 cursor-pointer "/>
       {/* <HeartFilled className="whishlist-icon"/> */}
-      <div className="w-full flex justify-center items-center ">
-        <img className="w-3/6" src={`/images/Products/${product.images[0]}`} alt="" />
+      <div className="w-full flex min-h-40 justify-center items-center ">
+        <img className="w-3/6" src={`${product.images[0]}`} alt="" />
       </div>
       <div className="flex items-center justify-between">
         <Link href={`/product/${product._id}`}><Title  level={5}>{product.name}</Title></Link>
@@ -46,9 +48,9 @@ const WishlistCard = ({ product }) => {
         </div>
       </div>
       <div className="flex gap-2 items-center ">
-        <Text className="font-bold">₹{product.price}</Text>
+        <Text className="font-bold">₹{product.sellingPrice}</Text>
         <Text type="secondary" delete >
-          ₹{(product.price * 1.1).toFixed(2)}
+          ₹{(product.sellingPrice * 1.1).toFixed(2)}
         </Text>
         <Tag bordered={false} color="green">
           10% OFF

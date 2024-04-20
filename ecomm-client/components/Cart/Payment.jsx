@@ -37,7 +37,7 @@ const SupermarketBill = ({ setCurrent }) => {
       return {
         product: item.product._id, 
         quantity: item.quantity,
-        price: item.product.price,
+        price: item.product.sellingPrice,
       };
     });
   }
@@ -50,13 +50,13 @@ const SupermarketBill = ({ setCurrent }) => {
     const newTableData = cart?.products?.map((product) => {
       return {
         item: product.product.name, // Assuming the product object has a "name" property
-        rate: product.product.price,
+        rate: product.product.sellingPrice,
         qty: product.quantity,
       };
     });
     setTableData(newTableData);
     const newTotal = cart?.products?.reduce((acc, product) => {
-      return acc + product.quantity * product.product.price;
+      return acc + product.quantity * product.product.sellingPrice;
     }, 0);
 
     setTotal(newTotal);

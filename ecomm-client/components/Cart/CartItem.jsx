@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import Image from 'next/image'
-import { Typography, Tag, InputNumber, Checkbox } from 'antd'
+// import Image from 'next/image'
+import { Typography, Tag, InputNumber, Checkbox, Image } from 'antd'
 import { CarOutlined, CloseOutlined } from '@ant-design/icons'
 import { useCart } from '../../contexts/cartContext';
 import { useSession } from 'next-auth/react';
@@ -23,17 +23,18 @@ const CartItem = ({ cartItem, index }) => {
         removeFromCart(cartItem.product._id, user._id);
     }
     
-    const image = `/images/products/${cartItem?.product?.images[0]}`;
+
 
   return (
     <div  className={`flex justify-between border-b px-2.5 py-5 relative ${index ? 'border-b-0' : 'border-b'}`}>
         <div className='flex gap-3'>
         <div>
             <Image 
+            preview={false}
             className='relative'
             width={70}
             height={70}
-            src={image}
+            src={cartItem.product.images[0]}
              />
              <Checkbox checked={true} className='absolute top-2 left-0' onChange={onChange}/>
         </div>
@@ -44,8 +45,8 @@ const CartItem = ({ cartItem, index }) => {
                     <Paragraph>{cartItem.product.description}</Paragraph>
                 </div>
                 <div className='flex gap-2 items-center'>
-                    <Title level={5}>₹{cartItem.product.price}</Title> 
-                    <Text  type="secondary" delete >₹{(cartItem.product.price * 1.1).toFixed(2)}</Text>
+                    <Title level={5}>₹{cartItem.product.sellingPrice}</Title> 
+                    <Text  type="secondary" delete >₹{(cartItem.product.sellingPrice * 1.1).toFixed(2)}</Text>
                     <Tag bordered={false} color="green">10% OFF</Tag>
                 </div>
                 <div className='flex gap-2 items-center'>

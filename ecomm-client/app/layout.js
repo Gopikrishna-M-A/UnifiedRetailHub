@@ -3,6 +3,8 @@ import Navbar from "../components/Utils/Navbar";
 import Footer from "../components/Utils/Footer";
 import { CartProvider } from "../contexts/cartContext";
 import { WishlistProvider } from "../contexts/wishlistContext";
+import { AnalyticsProvider } from '../contexts/AnalyticsContext'
+import { ConfigProvider } from 'antd';
 import { getServerSession } from "next-auth/next";
 import { options } from "../app/api/auth/[...nextauth]/options";
 import Session from "../components/Session";
@@ -18,15 +20,28 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
+      <ConfigProvider
+          theme={{
+            token: {
+              // Seed Token
+              colorPrimary: "#0284c7",
+              // Alias Token
+              colorBgContainer: "#ffffff",
+            },
+          }}
+        >
         <Session session={session}>
           <CartProvider>
             <WishlistProvider>
+              <AnalyticsProvider>
               <Navbar session={session} />
               {children}
               <Footer />
+              </AnalyticsProvider>
             </WishlistProvider>
           </CartProvider>
         </Session>
+        </ConfigProvider>
       </body>
     </html>
   );

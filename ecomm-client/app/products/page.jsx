@@ -1,4 +1,4 @@
-import ProductListing from '../../../components/Home/ProductListing'
+import ProductListing from '../../components/Home/ProductListing'
 import { getProducts, getUniqueCategories } from '@/utils/products';
 
 const page = async({params}) => {
@@ -6,7 +6,7 @@ const page = async({params}) => {
   const Categories = await getUniqueCategories()
 
   return (
-    <ProductListing  categories={Categories} products={products} id={params.CategoryId}  allP={false} />
+    <ProductListing  categories={Categories} products={products} id={''} allP={true} />
   )
 }
 

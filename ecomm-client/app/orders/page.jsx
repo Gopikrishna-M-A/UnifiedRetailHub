@@ -165,7 +165,7 @@ const page = () => {
   }
 
   return (
-    <div className="px-10 py-2.5 ">
+    <div className="px-10 py-2.5">
       <div className="">
         <div className="flex justify-between">
           <div className="flex gap-1 items-center">

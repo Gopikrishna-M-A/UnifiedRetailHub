@@ -28,11 +28,11 @@ const PriceDetails = ({ setCurrent }) => {
     const priceDetails = cart?.products?.map((cartItem) => (
         <div key={cartItem.product._id} className="flex justify-between">
           <Text style={{width:"70%"}} type="secondary">{`${cartItem.quantity} x ${cartItem.product.name}`}</Text>
-          <Text>{`₹${calculateTotalPrice(cartItem.quantity, cartItem.product.price).toFixed(2)}`}</Text>
+          <Text>{`₹${calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice).toFixed(2)}`}</Text>
         </div>
       ));
     const totalAmount = cart?.products?.reduce(
-        (total, cartItem) => total + calculateTotalPrice(cartItem.quantity, cartItem.product.price),
+        (total, cartItem) => total + calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice),
         0
     );
     const couponDiscount = totalAmount > 25 ? 10 : 0 // Assuming a fixed coupon discount for this example
@@ -69,7 +69,7 @@ const PriceDetails = ({ setCurrent }) => {
           <Title level={5}>{`₹${(totalAmount - couponDiscount).toFixed(2)}`}</Title>
         </div>
       </div>
-      <Button onClick={onButtonClick} size="large">
+      <Button onClick={onButtonClick} size="large" type='primary' className='bg-sky-600'>
         Place order
       </Button>
     </div>
