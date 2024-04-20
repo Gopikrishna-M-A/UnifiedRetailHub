@@ -12,7 +12,7 @@ import {
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import Link from "next/link";
 import { useCart } from "../../contexts/cartContext";
-import { useAnalytics } from "../../contexts/AnalyticsContext";
+import { useAnalytics } from "../../contexts/analyticsContext";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
