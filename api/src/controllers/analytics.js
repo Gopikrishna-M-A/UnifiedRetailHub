@@ -10,20 +10,22 @@ export const createAnalytics = async (req, res) => {
     console.error('Error creating analytics event:', error);
     res.status(400).json({ error: 'Bad request' });
   }
-}   
+}
+ 
 
 
 
 
 export const getAllAnalytics = async (req, res) => {
   try {
-    const analyticsEvents = await Analytics.find();
+    const userId = req.params.userId;
+    const analyticsEvents = await Analytics.find({ user: userId });
     res.json(analyticsEvents);
   } catch (error) {
     console.error('Error getting analytics events:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-}   
+}
 
 
 

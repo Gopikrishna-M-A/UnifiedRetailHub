@@ -3,7 +3,7 @@ import { createAnalytics, getAllAnalytics, getAnalytics, updateAnalytics, delete
 const router = express.Router();
 
 router.post("/", createAnalytics)
-router.get("/", getAllAnalytics)
+router.get("/:userId", getAllAnalytics)
 router.get("/:eventId", getAnalytics)
 router.patch("/:eventId", updateAnalytics)
 router.delete("/:eventId", deleteAnalytics)
