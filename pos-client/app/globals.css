@@ -79,3 +79,60 @@
 .h-screen-lg {
   height: calc(100vh - 56px);
 }
+
+
+
+/* PAYMENT BILL START */
+
+.supermarket-bill{
+  padding: 20px 30px ;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-start;
+  max-width: 400px;
+  min-width: 400px;
+}
+
+.supermarket-bill h2{
+  margin: auto;
+}
+.store-info{
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-content: center;
+  text-align: center;
+}
+.dot-line{
+  border-bottom: 1px dashed #424242;
+  margin: 0;
+}
+
+.invoice-head th{
+  border-bottom: 1px dashed #424242;
+  padding: 5px 0 ;
+  padding-bottom: 10px;
+}
+.invoice-head th{
+  padding: 5px ;
+}
+.invoice-table tbody tr:first-child td{
+  padding-top: 10px;
+}
+.invoice-total{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.invoice-total-tag{
+    font-size: 22px;
+    font-weight: bolder;
+}
+.invoice-total-price{
+  font-size: 22px;
+  font-weight: bolder;
+}

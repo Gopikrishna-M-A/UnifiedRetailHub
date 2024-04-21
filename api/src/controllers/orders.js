@@ -105,8 +105,9 @@ export const createPosOrder = async (req, res) => {
       orderSource: "pos",
       DeliverType
     });
-    const savedOrder = await newOrder.save();
-    res.status(201).json(savedOrder);
+    const savedOrder = await newOrder.save()
+    const populatedOrder = await Order.findById(savedOrder._id).populate('products.product').populate('customer')
+    res.status(201).json(populatedOrder);
   } catch (error) {
     console.error('Error creating order:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
+import Bill from "./Bill";
 
 const Cart = () => {
   const {
@@ -52,8 +53,11 @@ const Cart = () => {
   const [selectedCart, setSelectedCart] = useState(null);
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
+  const [billOpen,setBillOpen] = useState(false)
   const [received, setReceived] = useState(0);
   const [newUser,setNewUser] = useState(false)
+  const [order,setOrder] = useState()
+  const [print,setPrint] = useState(false)
 
   const [name, setName] = useState(null);
   const [phone, setPhone] = useState(null);
@@ -126,6 +130,7 @@ const Cart = () => {
 
     if (userWithPhoneNumber) {
       setDefaultFormValues(userWithPhoneNumber);
+      setNewUser(false)
     }else{
       setNewUser(true)
     }
@@ -228,6 +233,8 @@ const Cart = () => {
     };
     console.log("payment",cart);
     axios.post(`${baseURL}/api/orders/posOrder`, payment).then((res) => {
+      setOrder(res.data)
+      setBillOpen(true)
       clearCart();
       setName(null);
       setPhone(null);
@@ -391,6 +398,30 @@ const Cart = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+
+
+          <Dialog open={billOpen} onOpenChange={setBillOpen}>
+            <DialogContent className='h-[700px] overflow-scroll' >
+              <DialogHeader>
+                <DialogDescription>
+                  <div className=" w-full flex justify-center items-center ">
+                      <Bill order={order} print={print}/>
+                  </div>
+                    <DialogClose asChild className="">
+                      <Button className="mt-5 float-right" onClick={()=>{
+                        setBillOpen(false)
+                        setPrint(true)
+                        }}>
+                        Print
+                      </Button>
+                    </DialogClose>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          
 
           <div className="flex items-center text-xs cursor-pointer hover:text-gray-500">
             <span className="material-symbols-outlined">more_horiz</span>

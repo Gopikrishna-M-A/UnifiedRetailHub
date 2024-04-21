@@ -28,7 +28,7 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-pdf/renderer": "^3.3.8",
     "@tanstack/react-table": "^8.11.7",
-    "antd": "^5.15.4",
+    "antd": "^5.16.2",
     "aws-sdk": "^2.1589.0",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
