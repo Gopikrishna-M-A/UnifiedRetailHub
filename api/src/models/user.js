@@ -13,11 +13,9 @@ const userSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
   },
   oAuthId: {
     type: String,
-    required: true,
   },
   phone: String,
   address: {
@@ -33,6 +31,9 @@ const userSchema = new mongoose.Schema({
     },
     value: mongoose.Schema.Types.Mixed,
   }],
+  posUser:{
+    type:Boolean
+  }
 });
 
 

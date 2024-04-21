@@ -104,7 +104,7 @@ const ProductList = () => {
       <div className="flex flex-wrap gap-5 p-5">
         {loading ? (
              Array.from({ length: 15 }, (_, index) => (
-          <div className="flex flex-col space-y-3">
+          <div key={index} className="flex flex-col space-y-3">
             <Skeleton className=" h-24 w-36 rounded-xl" />
             <div className="space-y-2">
               <Skeleton className="h-4  w-36" />
@@ -114,8 +114,8 @@ const ProductList = () => {
            ))
         ) : (
           filteredProducts.map((product) => (
-            <div onClick={() => addToCart(product)}>
-              <Product key={product.id} product={product} />
+            <div key={product._id} onClick={() => addToCart(product)}>
+              <Product product={product} />
             </div>
           ))
         )}

@@ -254,7 +254,7 @@ export const downloadInvoice = (order) => {
     startY + order.products.length * 10 + 20,
     `$${order.products?.reduce(
       (total, cartItem) =>
-        total + calculateTotalPrice(cartItem.quantity, cartItem.product.price),
+        total + calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice),
       0
     )}.00`
   );
@@ -278,7 +278,7 @@ export const downloadInvoice = (order) => {
       order.products?.reduce(
         (total, cartItem) =>
           total +
-          calculateTotalPrice(cartItem.quantity, cartItem.product.price),
+          calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice),
         0
       ) - Discount
     }.00`

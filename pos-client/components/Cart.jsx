@@ -53,6 +53,7 @@ const Cart = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
   const [received, setReceived] = useState(0);
+  const [newUser,setNewUser] = useState(false)
 
   const [name, setName] = useState(null);
   const [phone, setPhone] = useState(null);
@@ -125,6 +126,8 @@ const Cart = () => {
 
     if (userWithPhoneNumber) {
       setDefaultFormValues(userWithPhoneNumber);
+    }else{
+      setNewUser(true)
     }
   };
 
@@ -159,7 +162,27 @@ const Cart = () => {
         zipCode: formObject.pin,
         country: formObject.country,
     }
-    setCustomer({ name: formObject.name, phone: formObject.phone, _id: formObject.id, shippingAddress});
+   
+
+    console.log("email",formObject.email,"name",formObject.name,"phone",formObject.phone,"addr",shippingAddress);
+    if (newUser) {
+      axios.post(`${baseURL}/api/user`, {
+        email: formObject.email,
+        name: formObject.name,
+        phone: formObject.phone,
+        address: shippingAddress,
+        posUser: true,
+      })
+      .then((res) => {
+        console.log("New user created:", res.data); // Logging the response data
+        setCustomer(res.data);
+      })
+      .catch((err) => {
+        console.error("Error creating new user:", err); // Logging the error
+      });
+    }else{
+      setCustomer({ name: formObject.name, phone: formObject.phone, _id: formObject.id, address:shippingAddress});
+    }
   };
 
   function formatDateTime(input) {
@@ -198,11 +221,12 @@ const Cart = () => {
       customer: cart.customer._id,
       products:convertProducts(products),
       totalAmount: total,
-      shippingAddress: cart.customer.shippingAddress,
+      shippingAddress: cart.customer.address,
       paymentStatus: "Paid",
       method,
       DeliverType:"Delivery",
     };
+    console.log("payment",cart);
     axios.post(`${baseURL}/api/orders/posOrder`, payment).then((res) => {
       clearCart();
       setName(null);
@@ -300,7 +324,7 @@ const Cart = () => {
           <Dialog>
             <DialogTrigger>
               <div className="flex flex-col items-center text-xs cursor-pointer hover:text-gray-500">
-                <span class="material-symbols-outlined">history</span>
+                <span className="material-symbols-outlined">history</span>
                 Recall Bill
               </div>
             </DialogTrigger>

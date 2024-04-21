@@ -11,13 +11,13 @@ import User from '../models/user.js'
 export const addUser = async (req, res) => {
   const { name, email, image, oAuthId } = req.body;
   const existingUser = await User.findOne({ email });
-
+  console.log("body user", req.body);
   if (existingUser) {
     // If the user already exists, return a conflict status
     return res.status(200).json({ message: 'User with this email already exists', user: existingUser });
   }
-  const newUser = new User({ name, email, image, oAuthId });
-
+  const newUser = new User(req.body);
+  console.log("new user",newUser);
   try {
     await newUser.save();
     res.status(201).json(newUser);
