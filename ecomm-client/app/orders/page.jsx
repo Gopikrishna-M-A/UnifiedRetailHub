@@ -65,8 +65,9 @@ const page = () => {
       const { data } = await axios.get(
         `${baseURL}/api/orders/history/${user._id}`
       );
-      setOrders(data);
-      setTotalOrders(data.length);
+      const ecommerceOrders = data.filter(order => order.orderSource === 'ecommerce').reverse();
+      setOrders(ecommerceOrders);
+      setTotalOrders(ecommerceOrders.length);
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
@@ -173,7 +174,8 @@ const page = () => {
             <Paragraph type="secondary">({totalOrders})</Paragraph>
           </div>
           <div className="flex">
-            <Button icon={<QuestionCircleOutlined />}>Need Help?</Button>
+            <Link href={'mailto:support@maliakkalstores.com'}><Button icon={<QuestionCircleOutlined />}>Need Help?</Button></Link>
+            
           </div>
         </div>
         <Breadcrumb
@@ -193,7 +195,7 @@ const page = () => {
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col w-4/6">
                     <Link href={`/orders/${order._id}`}>
-                      <Title level={4}> # {order?.OrderId} </Title>
+                      <Title level={4}> {order?.orderNumber} </Title>
                     </Link>
                     <div className="flex gap-10">
                       <div className="flex flex-col gap-1">

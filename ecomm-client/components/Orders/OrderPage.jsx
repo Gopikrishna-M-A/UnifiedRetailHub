@@ -190,7 +190,7 @@ const page = ({ orderId }) => {
             <Paragraph type="secondary">({totalOrders})</Paragraph>
           </div>
           <div className="flex gap-1">
-            <Button icon={<QuestionCircleOutlined />}>Need Help?</Button>
+          <Link href={'mailto:support@maliakkalstores.com'}><Button icon={<QuestionCircleOutlined />}>Need Help?</Button></Link>
             <Button
               disabled={totalOrders < 1 ? true : false}
               icon={<FilePdfOutlined />}
@@ -203,7 +203,7 @@ const page = ({ orderId }) => {
         <Breadcrumb
           items={[
             totalOrders > 0 && {
-              title: `#${CurrentOrder?.OrderId}`,
+              title: `${CurrentOrder?.orderNumber}`,
             },
             totalOrders > 0 && {
               title: <Link href="/orders">History</Link>,
@@ -237,7 +237,7 @@ const page = ({ orderId }) => {
               <>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col w-2/3">
-                    <Title level={4}> # {CurrentOrder?.OrderId}</Title>
+                    <Title level={4}> {CurrentOrder?.orderNumber}</Title>
                     <div className="flex justify-between">
                       <div className="flex flex-col gap-1">
                         <Paragraph type="secondary">Order</Paragraph>

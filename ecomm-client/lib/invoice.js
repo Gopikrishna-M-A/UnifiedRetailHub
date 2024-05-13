@@ -185,7 +185,7 @@ export const downloadInvoice = (order) => {
   pdf.setFont("times", "bold");
   pdf.text(25, 30, "Invoice number");
   pdf.setFont("times", "normal");
-  pdf.text(55, 30, `${order.OrderId}`);
+  pdf.text(55, 30, `${order.orderNumber}`);
 
   pdf.setFont("times", "bold");
   pdf.text(25, 35, "Date of issue");

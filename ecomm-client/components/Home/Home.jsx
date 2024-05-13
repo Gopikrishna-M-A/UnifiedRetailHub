@@ -21,7 +21,7 @@ const Home = ({ categories }) => {
     <div className=" px-2 py-1  lg:px-10 lg:py-2.5 ">
       {/* SHOP BY CATEGORY SECTION */}
 
-      <div className="flex justify-between my-2.5 gap-1">
+      {/* <div className="flex justify-between my-2.5 gap-1">
         <div className="lg:flex gap-1 hidden ">
           <Button icon={<MenuOutlined />}>SHOP BY CATEGORY</Button>
           <Button icon={<ThunderboltOutlined />} type="text">
@@ -60,18 +60,18 @@ const Home = ({ categories }) => {
             Recently Viewed
           </Button>
         </div>
-      </div>
+      </div> */}
 
       {/* BANNER SECTION */}
 
       <div className="flex banner w-full justify-between my-2.5">
         <div className="w-full ">
           <Carousel className="carousel" autoplay>
-            <div className=" h-96 ">
+            <div className=" lg:h-96 sm:h-44">
               <Image
                 width={816}
                 height={320}
-                src="/images/Banner/fresh.jpg"
+                src="/images/Banner/1.png"
                 alt="Banner Image"
                 className="w-full"
               />
@@ -91,11 +91,17 @@ const Home = ({ categories }) => {
           </Text>
         </div>
 
-        <div className="flex flex-wrap  gap-5 lg:gap-2 mt-2.5 py-2.5 px-2.5 ">
+        {/* <div className="flex flex-wrap  gap-5 lg:gap-2 mt-2.5 py-2.5 px-2.5 ">
           {categories.map((category,index) => {
             return <CategoryCard key={category._id} category={category} />;
           })}
+        </div> */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 gap-5 mt-2.5 py-2.5 ">
+          {categories.map((category, index) => {
+            return <CategoryCard key={category._id} category={category} />;
+          })}
         </div>
+
       </div>
 
       {/* FEATURED BRANDS SECTION */}

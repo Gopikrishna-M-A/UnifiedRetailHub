@@ -64,9 +64,11 @@ const Cart = () => {
 
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
+
   useEffect(() => {
     updateCart();
   }, [cart]);
+
 
   const updateCart = () => {
     const uniqueProducts = cart.products.reduce(
@@ -423,9 +425,9 @@ const Cart = () => {
 
           
 
-          <div className="flex items-center text-xs cursor-pointer hover:text-gray-500">
+          {/* <div className="flex items-center text-xs cursor-pointer hover:text-gray-500">
             <span className="material-symbols-outlined">more_horiz</span>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="w-full overflow-y-scroll h-full pb-56">
@@ -485,7 +487,7 @@ const Cart = () => {
         </div>
 
         <div className="flex w-full justify-between">
-          <Dialog onOpenChange={()=>setReceived(0)}>
+          <Dialog onOpenChange={()=>setReceived(0)} >
             <DialogTrigger asChild>
               <Button variant="outline">Cash[F1]</Button>
             </DialogTrigger>
@@ -531,45 +533,75 @@ const Cart = () => {
             </DialogContent>
           </Dialog>
 
-          <Dialog>
+          <Dialog >
             <DialogTrigger asChild>
               <Button variant="outline">Card[F2]</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Cash</DialogTitle>
-                <DialogDescription>data</DialogDescription>
+                <DialogTitle>Card</DialogTitle>
+                <DialogDescription>
+                <div className="flex justify-center items-center">
+                            <div className="w-2/5">Reference Number / Id</div>
+                            <Input className="w-3/5"/>
+                        </div>
+                </DialogDescription>
               </DialogHeader>
+              <DialogFooter className="sm:justify-end">
+                <DialogClose asChild>
+                  <Button onClick={()=>handleTender("card")}>Tender</Button>
+                </DialogClose>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
 
-          <Dialog>
+          <Dialog >
             <DialogTrigger asChild>
               <Button variant="outline">Upi[F3]</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Cash</DialogTitle>
-                <DialogDescription>data</DialogDescription>
+                <DialogTitle>Upi</DialogTitle>
+                <DialogDescription>
+                <div className="flex justify-center items-center">
+                            <div className="w-2/5">Reference Number / Id</div>
+                            <Input className="w-3/5"/>
+                        </div>
+                </DialogDescription>
               </DialogHeader>
+              <DialogFooter className="sm:justify-end">
+                <DialogClose asChild>
+                  <Button onClick={()=>handleTender("Upi")}>Tender</Button>
+                </DialogClose>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
 
-          <Dialog>
+          <Dialog >
             <DialogTrigger asChild>
               <Button variant="outline">Credit sale[F4]</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Cash</DialogTitle>
-                <DialogDescription>data</DialogDescription>
+                <DialogTitle>Credit sale</DialogTitle>
+                <DialogDescription>
+                <div className="flex justify-center items-center">
+                            <div className="w-2/5">Reference Number / Id</div>
+                            <Input className="w-3/5"/>
+                        </div>
+                </DialogDescription>
               </DialogHeader>
+              <DialogFooter className="sm:justify-end">
+                <DialogClose asChild>
+                  <Button onClick={()=>handleTender("credit")}>Tender</Button>
+                </DialogClose>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
 
         <div className="w-full">
-          <Dialog>
+          <Dialog >
             <DialogTrigger asChild>
               <Button className="w-full" variant="outline">
                 Split Payment[F12]
@@ -577,8 +609,8 @@ const Cart = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Cash</DialogTitle>
-                <DialogDescription>data</DialogDescription>
+                <DialogTitle>Split Payment</DialogTitle>
+                <DialogDescription>Currently Unavailable</DialogDescription>
               </DialogHeader>
             </DialogContent>
           </Dialog>

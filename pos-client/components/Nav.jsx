@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ModeToggle } from "./mode-toggle";
+import Link from "next/link";
+import { Button } from "./ui/button";
 const Nav = () => {
 
   const [online, setOnline] = useState(true);
@@ -17,8 +19,8 @@ const Nav = () => {
 
   return (
     <div className="border-b h-14 flex items-center px-5 justify-between">
-      <div className="flex gap-5 items-center">
-        <svg
+      <div className="flex gap-3 items-center">
+        {/* <svg
           className="cursor-pointer"
           width="30"
           height="30"
@@ -32,8 +34,11 @@ const Nav = () => {
             fill-rule="evenodd"
             clip-rule="evenodd"
           ></path>
-        </svg>
-        <div className="font-bold text-lg">Mart</div>
+        </svg> */}
+        <Link href={'/'} className="font-bold text-lg">Mart</Link>
+        <Link href={'/orders'} className=""><Button  variant='outline'>ORDERS</Button></Link>
+
+        
       </div>
 
     

@@ -23,11 +23,19 @@ console.log("product.images[0]",product.images[0]);
       
 
       <div className="w-full flex justify-center items-center ">
-        <img className="w-3/6" src={product.images[0]} alt="" />
+        <img
+          className="w-3/6"
+          src={`${product.images[0]}`}
+          alt=""
+          onError={(e) => {
+            e.target.onerror = null; // Prevent infinite loop in case fallback image also fails
+            e.target.src = '/images/Products/placeholder.png'; // Path to your fallback image
+          }}
+        />
       </div>
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-5">
         <div className="text-md font-bold">{product.name}</div>
-        <div className="text-nowrap text-sm text-muted-foreground" >{product?.attributes?.weight || product?.attributes?.size}</div>
+        <div className="text-nowrap text-sm text-muted-foreground" >{product?.weight?.value}gm</div>
       </div>
       <div className="flex gap-1 ">
         <div className=" text-muted-foreground text-sm">{truncatedDescription}</div>
@@ -45,9 +53,9 @@ console.log("product.images[0]",product.images[0]);
         </div>
       </div>
       <div className="flex gap-2 items-center ">
-        <div className="font-bold text-sm">₹{product.price}</div>
+        <div className="font-bold text-sm">₹{product.sellingPrice}</div>
         <div className="text-sm text-muted-foreground line-through" >
-          ₹{(product.price * 1.1).toFixed(2)}
+          ₹{(product.MRP * 1.1).toFixed(2)}
         </div>
         <div className="text-xs bg-green-100 text-green-600 px-2 py-1 rounded">
           10% OFF

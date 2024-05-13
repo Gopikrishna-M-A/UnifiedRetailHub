@@ -41,6 +41,14 @@ const Products = ({ product }) => {
       addToCart(product._id, user._id, qty);
     }
   };
+  const handleBuy = async () => {
+    if (!user) {
+      push(`/api/auth/signin?callbackUrl=/products/${product.category._id}`);
+    } else {
+      addToCart(product._id, user._id, qty);
+      push(`/cart`);
+    }
+  };
   const images = {};
 
   for (let i = 0; i < product?.images?.length; i++) {
@@ -160,16 +168,16 @@ const Products = ({ product }) => {
               <Button size="large" onClick={handleCart}>
                 Add to Cart
               </Button>
-              <Link href={"/cart"}>
+              {/* <Link href={"/cart"}> */}
                 <Button
                   size="large"
                   className="bg-blue-500"
                   type="primary"
-                  onClick={handleCart}
+                  onClick={handleBuy}
                 >
                   Buy Now
                 </Button>
-              </Link>
+              {/* </Link> */}
             </div>
           </div>
 

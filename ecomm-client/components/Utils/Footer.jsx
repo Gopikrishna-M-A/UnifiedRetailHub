@@ -6,11 +6,11 @@ import Link from "next/link";
 const Footer = () => {
   
   return (
-    <footer className="bg-slate-950 text-white py-12">
+    <footer className="bg-gray-100 text-gray-500 py-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* About Us */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold mb-4">About Us</h3>
+          <h3 className="text-lg font-semibold mb-4 text-gray-600">About Us</h3>
           <p className="mb-2">
             We are committed to promoting sustainable living and environmental conservation.
           </p>
@@ -25,28 +25,28 @@ const Footer = () => {
         
         {/* Contact Us */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
+          <h3 className="text-lg font-semibold mb-4  text-gray-600">Contact Us</h3>
           <p className="mb-2">
-            <strong>Email:</strong> contact@maliakkalstores.com
+            <strong className=" text-gray-600">Email:</strong> contact@maliakkalstores.com
           </p>
           <p className="mb-2">
-            <strong>Phone:</strong> +1234567890
+            <strong className=" text-gray-600">Phone:</strong> +1234567890
           </p>
           <p>
-            <strong>Address:</strong> 123 Green Street, Eco City, Earth
+            <strong className="text-gray-600">Address:</strong> 123 Green Street, Eco City, Earth
           </p>
         </div>
         
         {/* Quick Links */}
         <div className="text-center md:text-left">
-          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+          <h3 className="text-lg font-semibold mb-4  text-gray-600">Quick Links</h3>
           <ul className="mb-4">
             <li><Link href="/" className="hover:text-gray-200">Home</Link></li>
             <li><Link href="/products" className="hover:text-gray-200">Products</Link></li>
             <li><Link href="/" className="hover:text-gray-200">About Us</Link></li>
             <li><Link href="/" className="hover:text-gray-200">Contact</Link></li>
           </ul>
-          <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
+          <h3 className="text-lg font-semibold mb-4 text-gray-600">Follow Us</h3>
           <div className="flex justify-center md:justify-start">
             <a href="#" className="mr-4 hover:text-gray-200">Facebook</a>
             <a href="#" className="mr-4 hover:text-gray-200">Twitter</a>
@@ -55,7 +55,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="text-center mt-8">
-        <p>&copy; {new Date().getFullYear()} Maliakkal Stores. All rights reserved.</p>
+        <p className="text-gray-600">&copy; {new Date().getFullYear()} Maliakkal Stores. All rights reserved.</p>
       </div>
     </footer>
   );

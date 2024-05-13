@@ -131,18 +131,29 @@ export default function DataTableDemo() {
     setShippingPhone(billingPhone)
   }
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const formattedDate = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  return formattedDate;
+}
+  
 
 
 
   useEffect(() => {
-    axios.get(`${baseURL}/api/vendor`).then((res) => {
+    axios.get(`${baseURL}/api/purchase`).then((res) => {
       setData(res.data)
+      console.log("data",data);
     })
 
-    axios.get(`${baseURL}/api/vendor`).then((res) => {
-      setVendors(res.data)
-      console.log("res",res.data);
-    })
+    // axios.get(`${baseURL}/api/vendor`).then((res) => {
+    //   setVendors(res.data)
+    //   console.log("res",res.data);
+    // })
   }, []);
 
 
@@ -171,14 +182,15 @@ export default function DataTableDemo() {
       enableHiding: false,
     },
     {
-      accessorKey: "displayName",
+      accessorKey: "billDate",
       header: ({ column }) => {
         return (
           <Button
+          className='p-0'
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Date
+            BILL Date
             <CaretSortIcon className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -192,7 +204,7 @@ export default function DataTableDemo() {
         //     The React Framework – created and maintained by @vercel.
         //   </HoverCardContent>
         // </HoverCard>
-        <div className="capitalize text-blue-500 font-bold cursor-pointer">{row.getValue("displayName")}</div>
+        <div>{formatDate(row.getValue("billDate"))}</div>
         // <Dialog className="w-fit">
         //   <DialogTrigger>{row.getValue("displayName")}</DialogTrigger>
         //   <DialogContent className="flex justify-center items-center w-fit p-10">
@@ -202,93 +214,92 @@ export default function DataTableDemo() {
       ),
     },
     {
-      accessorKey: "companyName",
+      accessorKey: "dueDate",
       header: ({ column }) => {
         return (
           <Button
+          className='p-0'
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            	
-            BILL#
+            DUE Date
             <CaretSortIcon className="ml-2 h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("companyName")}</div>
+        <div>{formatDate(row.getValue("dueDate"))}</div>
       ),
     },
     {
-      accessorKey: "email",
+      accessorKey: "billNumber",
+      header: '# BILL',
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("billNumber")}</div>
+      ),
+    },
+    {
+      accessorKey: "vendor",
       header: "VENDOR NAME",
       cell: ({ row }) => {
-        const email = row.getValue("email");
-        return <div className="capitalize">{email}</div>;
+        const vendor = row.getValue("vendor");
+        return <div className="capitalize">{vendor.displayName}</div>;
       },
     },
     {
-      accessorKey: "phone",
+      accessorKey: "status",
       header: "STATUS",
       cell: ({ row }) => {
-        const phone = row.getValue("phone");
         return (
-          <div className="capitalize">
-           {phone}
+          <div className="uppercase">
+           {row.getValue("status")}
           </div>
         );
       },
     },
     {
-      accessorKey: "payables",
-      header: () => <div className="text-right">DUE DATE</div>,
+      accessorKey: "paymentTerms",
+      header: () => <div >PAYMENT TERMS</div>,
       cell: ({ row }) => {
-        // const price = parseFloat(row.getValue("price"));
+
+        return <div className="uppercase">{row.getValue("paymentTerms")}</div>;
+      },
+    },
+    {
+      accessorKey: "total",
+      header: () => <div>TOTAL</div>,
+      cell: ({ row }) => {
+        const total = parseFloat(row.getValue("total"));
 
         // Format the amount as a dollar amount
         const formatted = new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "INR",
-        }).format('0');
+        }).format(total);
 
-        return <div className="text-right font-medium">{formatted}</div>;
+        return <div >{formatted}</div>;
       },
     },
     {
-      accessorKey: "credits",
-      header: () => <div className="text-right">AMOUNT</div>,
-      cell: ({ row }) => {
-        // const price = parseFloat(row.getValue("price"));
-
-        // Format the amount as a dollar amount
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "INR",
-        }).format('0');
-
-        return <div className="text-right font-medium">{formatted}</div>;
-      },
-    },
-    {
-        accessorKey: "credits",
-        header: () => <div className="text-right">BALANCE DUE</div>,
+        accessorKey: "balance",
+        header: () => <div>BALANCE DUE</div>,
         cell: ({ row }) => {
-          // const price = parseFloat(row.getValue("price"));
+          const balance = parseFloat(row.getValue("balance"));
   
           // Format the amount as a dollar amount
           const formatted = new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "INR",
-          }).format('0');
+          }).format(balance);
   
-          return <div className="text-right font-medium">{formatted}</div>;
+          return <div >{formatted}</div>;
         },
       },
     {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const vendor = row.original;
+        const purchase = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -300,12 +311,12 @@ export default function DataTableDemo() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(vendor._id)}
+                onClick={() => navigator.clipboard.writeText(purchase._id)}
               >
-                Copy Vendor ID
+                Copy Purchase ID
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={`/inventory/${vendor._id}`}>Edit Vendor</Link>
+                {/* <Link href={`/inventory/${purchase._id}`}>Edit Vendor</Link> */}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </DropdownMenuContent>
@@ -342,7 +353,7 @@ export default function DataTableDemo() {
 
       await Promise.all(
         selectedIds.map(async (id) => {
-          await axios.delete(`${baseURL}/api/vendor/${id}`);
+          await axios.delete(`${baseURL}/api/purchase/${id}`);
         })
       );
 
@@ -411,120 +422,8 @@ export default function DataTableDemo() {
       <CardHeader>
         <CardTitle className="flex justify-between">
         Bills
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button><Link href='/purchases/addBill'>Add New Bill</Link></Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-3xl overflow-y-scroll max-h-full">
-              <DialogHeader>
-                <DialogTitle>New Item</DialogTitle>
-                {/* <DialogDescription>
-                  Enter the details below to add a new Item.
-                </DialogDescription> */}
-              </DialogHeader>
-              <div className="flex items-center space-x-2">
-                <div className="grid flex-1 gap-2">
-                  <Separator className="mb-5" />
+        <Button><Link href='/purchases/addBill'>Add New Bill</Link></Button>
 
-
-
-                   
-
-             
-                      <div className="w-full flex gap-10">
-                        <div className="text-muted-foreground w-40">Vendor Name</div>
-                        <div className="w-full">
-                        <Select
-                          onValueChange={(e) => {
-                            setDisplayName(e)
-                          }}
-                        >
-                          <SelectTrigger className='w-3/4'>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                                {vendors.map((vendor)=>(
-                                 <SelectItem value='box'>{vendor.displayName}</SelectItem>
-                                ))}
-                          </SelectContent>
-                        </Select>
-                        </div>
-                      </div>
-
-
-                      <div className="w-full flex gap-10">
-                        <div className="text-muted-foreground w-40">Bill#</div>
-                        <div className="w-full">
-                        <Input className='w-3/4' onChange={(e) => setEmail(e.target.value)} />
-                        </div>
-                      </div>
-
-
-                      <div className="w-full flex gap-10">
-                        <div className="text-muted-foreground w-40">Order Number</div>
-                        <div className="w-full">
-                        <Input className='w-3/4' onChange={(e) => setEmail(e.target.value)} />
-                        </div>
-                      </div>
-
-
-                      <div className="w-full flex gap-10">
-                        <div className="text-muted-foreground w-40">Bill Date</div>
-                        <div className="w-full">
-                        <Input className='w-3/4' onChange={(e) => setEmail(e.target.value)} />
-                        </div>
-                      </div>
-
-                      <div className="w-full flex gap-10">
-                        <div className="text-muted-foreground w-40">Due Date</div>
-                        <div className="w-full">
-                        <Input className='w-3/4' onChange={(e) => setEmail(e.target.value)} />
-                        </div>
-                      </div>
-
-
-                      <div className="w-full flex gap-10">
-                        <div className="text-muted-foreground w-40">Payment Terms</div>
-                        <div className="w-full">
-                        <Select
-                          onValueChange={(e) => {
-                            setDisplayName(e)
-                          }}
-                        >
-                          <SelectTrigger className='w-3/4'>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                                 <SelectItem value='box'>Net 15</SelectItem>
-                                 <SelectItem value='box'>Net 30</SelectItem>
-                                 <SelectItem value='box'>Net 45</SelectItem>
-                                 <SelectItem value='box'>Net 60</SelectItem>
-                                 <SelectItem value='box'>Due end of the month</SelectItem>
-                                 <SelectItem value='box'>Due end of next month</SelectItem>
-                                 <SelectItem value='box'>Due on receipt</SelectItem>
-                                 <SelectItem value='box'>Custom</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        </div>
-                      </div>
-                  
-                </div>
-              </div>
-
-              <DialogFooter className="sm:justify-start">
-                <DialogClose asChild>
-                  <Button
-                    size="lg"
-                    className="w-full"
-                    type="button"
-                    onClick={addNewItem}
-                  >
-                    Add
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
         </CardTitle>
         <CardDescription>
           Total {data.length} {data.length === 1 ? "bill" : "bills"}
@@ -535,9 +434,9 @@ export default function DataTableDemo() {
           <div className="flex gap-1 items-center justify-between py-4">
             <Input
               placeholder="Filter name..."
-              value={table.getColumn("displayName")?.getFilterValue() ?? ""}
+              value={table.getColumn("vendor")?.getFilterValue() ?? ""}
               onChange={(event) =>
-                table.getColumn("displayName")?.setFilterValue(event.target.value)
+                table.getColumn("vendor")?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />

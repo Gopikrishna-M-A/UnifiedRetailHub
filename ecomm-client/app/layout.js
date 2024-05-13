@@ -18,7 +18,7 @@ export default async function RootLayout({ children }) {
   const session = await getServerSession(options);
 
   return (
-    <html lang="en">
+    <html lang="en" >
      <head>
         <link rel="icon" href="/images/favicon.ico" />
       </head>
@@ -40,7 +40,7 @@ export default async function RootLayout({ children }) {
               <AnalyticsProvider>
               <Navbar session={session} />
               {children}
-              <Footer />
+              {/* <Footer /> */}
               </AnalyticsProvider>
             </WishlistProvider>
           </CartProvider>

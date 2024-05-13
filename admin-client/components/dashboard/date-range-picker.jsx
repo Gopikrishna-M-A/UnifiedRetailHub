@@ -14,11 +14,16 @@ import {
   PopoverTrigger,
 } from "../ui/popover"
 
-export function CalendarDateRangePicker( className ){
+export function CalendarDateRangePicker({className,setReportDate} ){
   const [date, setDate] = React.useState({
     from: new Date(2023, 0, 20),
     to: addDays(new Date(2023, 0, 20), 20),
   })
+
+  React.useEffect(() => {
+    setReportDate(date)
+  }, [date])
+  
 
   return (
     <div className={cn("grid gap-2", className)}>

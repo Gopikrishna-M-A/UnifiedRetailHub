@@ -83,18 +83,18 @@ const ProductCard = ({ product }) => {
       </Link>
 
       <div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between gap-5">
           <Link href={`/product/${product._id}`}>
             <div className=" capitalize"> {lower(product.name)}</div>
           </Link>
           <Text className="text-nowrap" type="secondary">
-            {product?.attributes?.weight || product?.attributes?.size}
+            {product?.weight?.value}gm
           </Text>
         </div>
         <div className="flex gap-1">
           <Paragraph>{truncatedDescription}</Paragraph>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between mt-2">
           <Rate value={3} disabled />
           <div className="text-3xl p-0 w-6 h-6 rounded flex items-center justify-center  bg-green-50 border border-green-600">
             <div className="w-2 h-2 rounded-full bg-green-600"></div>

@@ -37,13 +37,13 @@ export const createProduct = async (req, res) => {
 
     await newProduct.save();
 
-    const newInventoryItem = new Inventory({
-      product: newProduct._id, // Reference to the newly created product
-      stockQuantity: 0, // You can set the initial stock quantity as needed
-      reservedQuantity: 0, // Initially, no reservations
-    });
+    // const newInventoryItem = new Inventory({
+    //   product: newProduct._id, // Reference to the newly created product
+    //   stockQuantity: 0, // You can set the initial stock quantity as needed
+    //   reservedQuantity: 0, // Initially, no reservations
+    // });
 
-    await newInventoryItem.save();
+    // await newInventoryItem.save();
 
     res.status(201).json(newProduct);
   } catch (error) {
@@ -105,6 +105,33 @@ export const bulkAdd = async (req, res) => {
     res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 }
+
+
+
+export const testRoute = async (req, res) => {
+  try {
+    // Find all products
+    const products = await Product.find();
+
+    // Update stockQuantity and reorderPoint for each product
+    const updatedProducts = await Promise.all(products.map(async (product) => {
+      // Update stockQuantity to 30 and reorderPoint to 10
+      product.stockQuantity = 30;
+      product.reorderPoint = 10;
+      
+      // Save the updated product
+      await product.save();
+      
+      return product;
+    }));
+
+    res.json(updatedProducts);
+  } catch (error) {
+    console.error('Error updating products:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+}
+
 
 
 

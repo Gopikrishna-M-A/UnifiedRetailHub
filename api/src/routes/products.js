@@ -1,5 +1,5 @@
 import express from 'express';
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, bulkAdd }  from '../controllers/products.js';
+import { getProducts, getProduct, createProduct, updateProduct, deleteProduct, bulkAdd, testRoute }  from '../controllers/products.js';
 const router = express.Router();
 
 
@@ -12,6 +12,12 @@ router.delete("/:productId", deleteProduct)
 
 
 
+
 router.post("/bulk", bulkAdd)
+
+router.post("/test-route", testRoute)
+
+
+
 
 export default router;

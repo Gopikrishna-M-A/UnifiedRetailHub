@@ -84,7 +84,7 @@ const Navbar = () => {
           <div className="bg-sky-600 px-3 py-1 rounded text-white font-bold text-lg">Maliakkal Stores</div>
         </Link>
 
-        <Search
+        {/* <Search
           style={{
             width: "100%",
             maxWidth: "300px",
@@ -108,7 +108,7 @@ const Navbar = () => {
           placeholder="I'm searching for..."
           allowClear
           onSearch={onSearch}
-        />
+        /> */}
 
         <div className="flex items-center gap-4">
           <div className=" flex gap-8 mr-3">

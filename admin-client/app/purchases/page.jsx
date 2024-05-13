@@ -33,8 +33,8 @@ export default function Page() {
         <TabsList>
           <TabsTrigger value="vendors">Vendors</TabsTrigger>
           <TabsTrigger value="order-management">Order Management</TabsTrigger>
-          <TabsTrigger value="bills">Vendor Payments</TabsTrigger>
-          <TabsTrigger value="vendor-credits">Vendor Credits</TabsTrigger>
+          {/* <TabsTrigger value="bills">Vendor Payments</TabsTrigger> */}
+          {/* <TabsTrigger value="vendor-credits">Vendor Credits</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="vendors" className="space-y-4">

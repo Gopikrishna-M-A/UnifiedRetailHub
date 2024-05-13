@@ -74,16 +74,29 @@ import axios from "axios";
 import { set } from "date-fns";
 import ProductCard from "../inventory/ProductCard";
 
+import { DatePickerWithPresets } from "../ui/datepicker";
+
+function generateRandomSixDigitNumber() {
+  const min = 100000; // Minimum value for a 6-digit number
+  const max = 999999; // Maximum value for a 6-digit number
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export default function DataTableDemo() {
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
   const [products, setProducts] = useState([]);
 
   const [vendor, setVendor] = useState("");
-  const [billNumber, setBillNumber] = useState("");
-  const [orderNumber, setOrderNumber] = useState("");
+
+  const [billNumber, setBillNumber] = useState(null);
+  const [invoiceNumber, setInvoiceNumber] = useState("");
   const [billDate, setBillDate] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("");
+
+  const [discount, setDiscount] = useState(0);
+  const [tds, setTds] = useState(0);
+  const [adjustment, setAdjustment] = useState(0);
 
   const [vendors, setVendors] = useState([]);
 
@@ -91,10 +104,15 @@ export default function DataTableDemo() {
     { product: "", quantity: "", rate: "", amount: "" },
   ]);
 
+  useEffect(() => {
+    // Generate random number only on the client side
+    setBillNumber(generateRandomSixDigitNumber());
+  }, []);
+
   const handleAddEntry = () => {
     setEntries([
       ...entries,
-      { product:'', quantity: "", rate: "", amount: "" },
+      { product: "", quantity: "", rate: "", amount: "" },
     ]);
   };
 
@@ -103,12 +121,23 @@ export default function DataTableDemo() {
     const newEntries = [...entries];
     newEntries[index][name] = value;
     setEntries(newEntries);
+    console.log("newEntries", newEntries);
+
+    const rate = parseFloat(newEntries[index].rate || 0);
+    const quantity = parseFloat(newEntries[index].quantity || 0);
+    newEntries[index].amount = (rate * quantity).toFixed(2);
   };
 
   const handleSelectChange = (index, value, name) => {
     const newEntries = [...entries];
     newEntries[index][name] = value;
     setEntries(newEntries);
+
+    const selectedProduct = products.find(product => product._id === value);
+    if (selectedProduct) {
+      newEntries[index]['MRP'] = selectedProduct.MRP || '';
+      newEntries[index]['rate'] = selectedProduct.costPrice || '';
+    }
   };
 
   const handleRemoveEntry = (index) => {
@@ -133,66 +162,37 @@ export default function DataTableDemo() {
     });
   }, []);
 
-
-  const display = () => {
-    console.log("data",{
-        entries:entries,
-        vendor:vendor,
-        billNumber:billNumber, 
-        orderNumber:orderNumber,
-        billDate:billDate,
-        dueDate:dueDate,
-        paymentTerms:paymentTerms
-
-    });
-  }
-
   const addNewItem = async () => {
-    // const requestBody = {
-    //   primaryContact: {
-    //     firstName,
-    //     lastName
-    //   },
-    //   companyName,
-    //   displayName,
-    //   email,
-    //   phone,
-    //   PAN,
-    //   MSME,
-    //   registrationType,
-    //   registrationNumber,
-    //   currency,
-    //   paymentTerms,
-    //   website,
-    //   department,
-    //   billingAddress: {
-    //     Attention: billingAttention,
-    //     country: billingCountry,
-    //     Address: billingAddress,
-    //     city: billingCity,
-    //     state: billingState,
-    //     zipCode: billingZipCode,
-    //     Phone: billingPhone,
-    //   },
-    //   shippingAddress: {
-    //     Attention: shippingAttention,
-    //     country: shippingCountry,
-    //     Address: shippingAddress,
-    //     city: shippingCity,
-    //     state: shippingState,
-    //     zipCode: shippingZipCode,
-    //     Phone: shippingPhone,
-    //   },
-    // };
-    // axios
-    //   .post(`${baseURL}/api/vendor`, requestBody)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     setData([...data, res.data]);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error adding product:", error);
-    //   });
+
+    const subTotal = calculateSubTotal()
+    const total = calculateTotal()
+
+
+    const requestBody = {
+      entries,
+      vendor,
+      billNumber,
+      invoiceNumber,
+      billDate,
+      dueDate,
+      paymentTerms,
+      balance:parseFloat(total),
+      tds: parseFloat(tds),
+      adjustment: parseFloat(adjustment),
+      discount: parseFloat(discount),
+      subTotal: parseFloat(subTotal),
+      total: parseFloat(total)
+    };
+    console.log("requestBody", requestBody);
+    axios
+      .post(`${baseURL}/api/purchase`, requestBody)
+      .then((res) => {
+        console.log(res.data);
+        // setData([...data, res.data]);
+      })
+      .catch((error) => {
+        console.error("Error adding product:", error);
+      });
   };
 
   const calculateSubTotal = () => {
@@ -204,16 +204,23 @@ export default function DataTableDemo() {
   };
 
   const calculateTotal = () => {
-    // Assuming there are additional calculations for discounts, TDS, and adjustments
-    // For demonstration, I'm simply returning the subtotal as the total
-    return calculateSubTotal();
+    const subtotal = calculateSubTotal(); // Calculate subtotal function
+    const discountPercentage = parseFloat(discount); // Parse discount to float
+    const adjustmentValue = parseFloat(adjustment); // Parse adjustment to float
+    const tdsValue = parseFloat(tds); // Parse TDS to float
+
+    // Calculate the total
+    const discountAmount = (subtotal * discountPercentage) / 100;
+    const total = subtotal - discountAmount + adjustmentValue - tdsValue;
+
+    return total.toFixed(2); // Format total to two decimal places
   };
 
   return (
     <Card className="col-span-7">
       <CardHeader>
         <CardTitle className="flex justify-between">
-          #213
+          #{billNumber}
           <Button onClick={handleAddEntry}>Add Product</Button>
         </CardTitle>
         <CardDescription>
@@ -236,7 +243,9 @@ export default function DataTableDemo() {
                   </SelectTrigger>
                   <SelectContent>
                     {vendors.map((vendor) => (
-                      <SelectItem value={vendor._id}>{vendor.displayName}</SelectItem>
+                      <SelectItem value={vendor._id}>
+                        {vendor.displayName}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -248,32 +257,44 @@ export default function DataTableDemo() {
               <div className="w-full">
                 <Input
                   className="w-3/4"
-                  onChange={(e) => setBillNumber(e.target.value)}
+                  value={billNumber}
+                  disabled={true}
+                  // onChange={(e) => setBillNumber(e.target.value)}
                 />
               </div>
             </div>
 
             <div className="w-full flex gap-10">
-              <div className="text-muted-foreground w-40">Order Number</div>
+              <div className="text-muted-foreground w-40">Invoice Number</div>
               <div className="w-full">
                 <Input
                   className="w-3/4"
-                  onChange={(e) => setOrderNumber(e.target.value)}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="w-full flex gap-10">
+            <div className="w-full flex gap-10 ">
               <div className="text-muted-foreground w-40">Bill Date</div>
               <div className="w-full">
-                <Input
-                  className="w-3/4"
-                  onChange={(e) => setBillDate(e.target.value)}
+                <DatePickerWithPresets
+                  setDateChange={setBillDate}
+                  // onChange={(e) => setBillDate(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="w-full flex gap-10">
+            <div className="w-full flex gap-10 items-center justify-center">
+              <div className="text-muted-foreground w-40">Due Date</div>
+              <div className="w-full">
+                <DatePickerWithPresets
+                  setDateChange={setDueDate}
+                  // onChange={(e) => setDueDate(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* <div className="w-full flex gap-10">
               <div className="text-muted-foreground w-40">Due Date</div>
               <div className="w-full">
                 <Input
@@ -281,7 +302,7 @@ export default function DataTableDemo() {
                   onChange={(e) => setDueDate(e.target.value)}
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="w-full flex gap-10">
               <div className="text-muted-foreground w-40">Payment Terms</div>
@@ -299,8 +320,12 @@ export default function DataTableDemo() {
                     <SelectItem value="net-30">Net 30</SelectItem>
                     <SelectItem value="net-45">Net 45</SelectItem>
                     <SelectItem value="net-60">Net 60</SelectItem>
-                    <SelectItem value="month-end">Due end of the month</SelectItem>
-                    <SelectItem value="next-month-end">Due end of next month</SelectItem>
+                    <SelectItem value="month-end">
+                      Due end of the month
+                    </SelectItem>
+                    <SelectItem value="next-month-end">
+                      Due end of next month
+                    </SelectItem>
                     <SelectItem value="receipt">Due on receipt</SelectItem>
                     <SelectItem value="custom">Custom</SelectItem>
                   </SelectContent>
@@ -317,7 +342,9 @@ export default function DataTableDemo() {
                   <Select
                     value={entry.product}
                     name="product"
-                    onValueChange={(value) => handleSelectChange(index, value, "product")}
+                    onValueChange={(value) =>
+                      handleSelectChange(index, value, "product")
+                    }
                     className="w-3/4"
                   >
                     <SelectTrigger>
@@ -351,15 +378,28 @@ export default function DataTableDemo() {
                   />
 
                   <Input
-                    name="amount"
-                    value={entry.amount}
+                    name="mrp"
+                    value={entry.MRP}
                     onChange={(e) => handleInputChange(index, e)}
-                    placeholder="Amount"
+                    placeholder="MRP"
                     type="number"
                     className="w-3/4"
                   />
 
-                  <Button onClick={() => handleRemoveEntry(index)} variant="ghost" className="text-red-600">
+                  <Input
+                    name="amount"
+                    value={entry.amount}
+                    placeholder="Amount"
+                    type="number"
+                    className="w-3/4"
+                    disabled
+                  />
+
+                  <Button
+                    onClick={() => handleRemoveEntry(index)}
+                    variant="ghost"
+                    className="text-red-600"
+                  >
                     X
                   </Button>
                 </div>
@@ -369,34 +409,61 @@ export default function DataTableDemo() {
 
           <div className="w-full mt-10 flex justify-end">
             <div className="flex flex-col gap-5 bg-gray-200 rounded-md w-1/2 p-5">
-                <div className="flex justify-between">
-                    <p className=" text-muted-foreground">Sub Total</p>
-                    <p>{calculateSubTotal()}</p>
-                </div>
-                <div className="flex justify-between">
-                    <p className=" text-muted-foreground">Discount</p>
-                    <Input className='w-40' type='number'></Input>
-                    <p>0.00</p>
-                </div>
-                <div className="flex justify-between">
-                    <p className=" text-muted-foreground">TDS</p>
-                    <p>0.00</p>
-                </div>
-                <div className="flex justify-between items-center">
-                    <p className=" text-muted-foreground">Adjustment</p>
-                    <Input className='w-40' type='number'></Input>
-                    <p>0.00</p>
-                </div>
-                <div className="flex justify-between">
-                    <p className="font-bold">Total</p>
-                    <p className="font-bold">{calculateTotal()}</p>
-                </div>
+              <div className="flex justify-between items-center">
+                <p className=" text-muted-foreground">Sub Total</p>
+                <p>{calculateSubTotal()}</p>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <p className="flex-1 text-muted-foreground">Discount</p>
+                <Input
+                  value={discount}
+                  onChange={(e) => setDiscount(e.target.value)}
+                  className="flex-1 w-40"
+                  type="number"
+                  suffix="%"
+                ></Input>
+                <p className="flex-1 text-right">
+                  {" "}
+                  {(
+                    calculateSubTotal() *
+                    (parseFloat(discount || 0) / 100)
+                  ).toFixed(2)}
+                </p>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <p className="flex-1 text-muted-foreground">TDS</p>
+                <Input
+                  value={tds}
+                  onChange={(e) => setTds(e.target.value)}
+                  className="flex-1 w-40"
+                  type="number"
+                ></Input>
+                <p className="flex-1 text-right">
+                  {parseFloat(tds).toFixed(2)}
+                </p>
+              </div>
+              <div className="flex justify-between items-center w-full">
+                <p className="flex-1 text-muted-foreground">Adjustment</p>
+                <Input
+                  value={adjustment}
+                  onChange={(e) => setAdjustment(e.target.value)}
+                  className="flex-1 w-40"
+                  type="number"
+                ></Input>
+                <p className="flex-1 text-right">
+                  {parseFloat(adjustment).toFixed(2)}
+                </p>
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="font-bold">Total</p>
+                <p className="font-bold">{calculateTotal()}</p>
+              </div>
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2 py-4">
             <div className="flex-1 text-sm text-muted-foreground"></div>
             <div className="space-x-2">
-              <Button onClick={display}>Save</Button>
+              <Button onClick={addNewItem}>Save</Button>
             </div>
           </div>
         </div>
@@ -404,3 +471,7 @@ export default function DataTableDemo() {
     </Card>
   );
 }
+
+// const [discount,setDiscount] = useState(0)
+// const [tds,setTds] = useState(0)
+// const [adjustment,setAdjustment] = useState(0)

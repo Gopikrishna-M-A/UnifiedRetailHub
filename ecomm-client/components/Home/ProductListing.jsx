@@ -72,10 +72,10 @@ const ProductCategory = ({ id, products, categories, allP }) => {
   const items = [
       getItem("Favorites", "sub1", <MailOutlined />, [
       getItem("All Products", 1),
-      getItem("Current Promotions", 2),
-      getItem("New Products", 3),
-      getItem("Best Sellers", 4),
-      getItem("Worst Sellers", 5),
+      // getItem("Current Promotions", 2),
+      // getItem("New Products", 3),
+      // getItem("Best Sellers", 4),
+      // getItem("Worst Sellers", 5),
     ]),
     getItem(
       "Filters",
@@ -96,20 +96,20 @@ const ProductCategory = ({ id, products, categories, allP }) => {
           </div>,
           "6"
         ),
-        getItem(
-          <div className="flex justify-between items-center p-3">
-            <Text className="w-2/5">Rating</Text>
-            <Slider className="w-3/5" defaultValue={3} max={5} />
-          </div>,
-          "7"
-        ),
-        getItem(
-          <div className="flex justify-between items-center p-3">
-            <Text className="w-2/5">Discount</Text>
-            <Slider className="w-3/5" range defaultValue={[0, 100]} max={100} />
-          </div>,
-          "8"
-        ),
+        // getItem(
+        //   <div className="flex justify-between items-center p-3">
+        //     <Text className="w-2/5">Rating</Text>
+        //     <Slider className="w-3/5" defaultValue={3} max={5} />
+        //   </div>,
+        //   "7"
+        // ),
+        // getItem(
+        //   <div className="flex justify-between items-center p-3">
+        //     <Text className="w-2/5">Discount</Text>
+        //     <Slider className="w-3/5" range defaultValue={[0, 100]} max={100} />
+        //   </div>,
+        //   "8"
+        // ),
       ],
       "group"
     ),

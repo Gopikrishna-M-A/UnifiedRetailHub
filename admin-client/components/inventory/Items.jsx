@@ -316,6 +316,13 @@ export default function DataTableDemo() {
       ),
     },
     {
+      accessorKey: "stockQuantity",
+      header: "QUANTITY",
+      cell: ({ row }) => {
+        return <div className="capitalize">{row.getValue("stockQuantity")}</div>;
+      },
+    },
+    {
       accessorKey: "category",
       header: "Category",
       cell: ({ row }) => {
