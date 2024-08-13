@@ -80,6 +80,7 @@ function formatDate(inputDateTime) {
 
 export default function DataTableDemo() {
   const [data, setData] = useState([]);
+  const [filtered, setFiltered] = useState([]);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -88,11 +89,12 @@ export default function DataTableDemo() {
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
   useEffect(() => {
-    axios.get(`${baseURL}/api/orders`)
+    axios.get(`/api/orders`)
     .then((res) => {
       // Filter orders where orderSource is 'pos'
       const posOrders = res.data.filter(order => order.orderSource === 'pos');
       setData(posOrders);
+      setFiltered(posOrders)
     })
     .catch((error) => {
       console.error('Error fetching orders:', error);
@@ -106,6 +108,7 @@ export default function DataTableDemo() {
     const filtered = data.filter((order) =>
       order.orderNumber.toLowerCase().includes(query.toLowerCase())
     );
+    setFiltered(filtered)
     console.log("filtered", filtered);
   };
 
@@ -247,7 +250,7 @@ export default function DataTableDemo() {
   ];
 
   const table = useReactTable({
-    data,
+    data:filtered,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

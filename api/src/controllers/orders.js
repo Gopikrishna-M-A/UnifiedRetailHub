@@ -2,14 +2,6 @@ import Order from '../models/orders.js'
 import razorpay from 'razorpay';
 import crypto from 'crypto'
 
-// function generateOrderNumber(orderId) {
-//   const hash = crypto.createHash('md5').update(orderId.toString()).digest('hex');
-//   const numericHash = parseInt(hash.slice(0, 6), 16);
-//   const sixDigitNumber = numericHash % 1000000; // Ensure it's a 6-digit number
-//   return sixDigitNumber.toString().padStart(6, '0');
-// }
-
-
 function generateOrderNumber() {
   // Function to generate a random hex digit
   function getRandomHexDigit() {

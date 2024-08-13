@@ -261,83 +261,10 @@ export default function DataTableDemo() {
   };
 
   return (
-    <Card className="col-span-7">
+      <Card className="col-span-7">
       <CardHeader>
         <CardTitle className="flex justify-between">
           Customers
-          {/* <Dialog>
-            <DialogTrigger asChild>
-              <Button> Add New Item</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Item</DialogTitle>
-                <DialogDescription>
-                  Enter the details below to add a new Item.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex items-center space-x-2">
-                <div className="grid flex-1 gap-2">
-                  <Input
-                    onChange={(e) => setProdName(e.target.value)}
-                    placeholder="Item name"
-                  />
-                  <Input
-                    type="number"
-                    onChange={(e) => setProdPrice(e.target.value)}
-                    placeholder="Item Price"
-                  />
-                  <Textarea
-                    onChange={(e) => setProdDesc(e.target.value)}
-                    placeholder="Item description"
-                  />
-                  <Select
-                    onValueChange={(e) => {
-                      setProdCat(e);
-                    }}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Item Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {parentAttributes.map((attribute, index) => (
-                    <div key={index} className="flex gap-2 w-full items-center">
-                      <div className="w-24 capitalize text-sm text-foreground rounded-md bg-gray-100 px-3 py-2">
-                        {attribute}
-                      </div>
-                      <Input
-                        placeholder="Attribute value..."
-                        onChange={(e) => {
-                          setProdAttr((prevProdAttri) => ({
-                            ...prevProdAttri,
-                            [index]: e.target.value,
-                          }));
-                        }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <DialogFooter className="sm:justify-start">
-                <DialogClose asChild>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={addNewItem}
-                  >
-                    Add
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog> */}
         </CardTitle>
         <CardDescription>
           Total {data.length} {data.length === 1 ? "Customer" : "Customers"}

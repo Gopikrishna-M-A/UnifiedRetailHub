@@ -21,11 +21,11 @@ const CartProduct = ({ product, index }) => {
           </div>
           <div className="flex gap-10">
             <div>x {product.quantity}</div>
-            <div>{formatPrice(product.product.sellingPrice * product.quantity)}</div>
+            <div>{formatPrice(product.product.currentPrice * product.quantity)}</div>
           </div>
         </div>
 
-        <div className="text-xs">{formatPrice(product.product.MRP)} | SKU:{product.product.SKU  } | Tax</div>
+        <div className="text-xs">{formatPrice(product.product.basePrice)} | SKU:{product.product.SKU  } | Tax</div>
 
         <div className="text-xs">Exempt</div>
       </div>

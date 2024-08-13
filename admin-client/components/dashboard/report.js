@@ -35,14 +35,14 @@ function generateCustomerTable(data) {
 
       // Calculate favourite product and category
       order.products.forEach((product) => {
-        productsCount[product.product.name] =
-          (productsCount[product.product.name] || 0) + product.quantity;
+        productsCount[product?.product?.name] =
+          (productsCount[product?.product?.name] || 0) + product?.quantity;
         if (
           !favouriteProduct ||
-          productsCount[product.product.name] > productsCount[favouriteProduct]
+          productsCount[product?.product?.name] > productsCount[favouriteProduct]
         ) {
-          favouriteProduct = product.product.name;
-          favouriteCategory = product.product.category;
+          favouriteProduct = product?.product?.name;
+          favouriteCategory = product?.product?.category;
         }
       });
 
@@ -88,8 +88,8 @@ function getProductInsights(data) {
     // Iterate through each order to calculate insights
     data.forEach(order => {
         order.products.forEach(product => {
-            const productId = product.product._id;
-            const productName = product.product.name;
+            const productId = product?.product?._id;
+            const productName = product?.product?.name;
 
             // If product not already in the map, initialize insights
             if (!productInsightsMap.has(productId)) {
@@ -108,8 +108,8 @@ function getProductInsights(data) {
             productInsights["Total Amount"] += product.price;
             productInsights["Quantity Sold"] += product.quantity;
             productInsights["Order Frequency"]++;
-            productInsights["Stock Quantity"] = product.product.stockQuantity;
-            productInsights["Total Cost"] += product.product.costPrice || 0;
+            productInsights["Stock Quantity"] = product?.product?.stockQuantity;
+            productInsights["Total Cost"] += product?.product?.costPrice || 0;
         });
     });
 

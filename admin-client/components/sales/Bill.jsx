@@ -21,9 +21,9 @@ const Bill = ({ order }) => {
             <tbody className="invoice-body">
               {order?.products?.map((row, index) => (
                 <tr key={index}>
-                  <td>{row.product.name}</td>
-                  <td>{row.price}</td>
-                  <td style={{ textAlign: "center" }}>{row.quantity}</td>
+                  <td>{row?.product?.name}</td>
+                  <td>{row?.price}</td>
+                  <td style={{ textAlign: "center" }}>{row?.quantity}</td>
                   <td style={{ textAlign: "right" }}>
                     {(row.price * row.quantity).toFixed(2)}
                   </td>

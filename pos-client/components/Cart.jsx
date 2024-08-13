@@ -89,14 +89,14 @@ const Cart = () => {
     );
     setProducts(uniqueProducts);
     setTotal(
-      cart.products.reduce((total, product) => total + product.sellingPrice, 0)
+      cart.products.reduce((total, product) => total + product.currentPrice, 0)
     );
     setLocalCarts(getAllCartsFromLocalStorage());
   };
 
   useEffect(() => {
     if(navigator.onLine){
-      axios.get(`${baseURL}/api/user`).then((res) => {
+      axios.get(`/api/customers`).then((res) => {
         const usersWithPhoneNumber = res.data.filter((user) => user?.phone);
         setUsers(usersWithPhoneNumber);
         localStorage.setItem("pos-users", JSON.stringify(usersWithPhoneNumber));
@@ -218,7 +218,7 @@ const Cart = () => {
     return products.map(product => ({
       product: product.product._id,  // Assuming each product has an '_id' property
       quantity: product.quantity,  // You can set the quantity based on your requirements
-      price: product.product.sellingPrice,
+      price: product.product.currentPrice,
     }));
   }
 
@@ -234,7 +234,7 @@ const Cart = () => {
       DeliverType:"Delivery",
     };
     console.log("payment",cart);
-    axios.post(`${baseURL}/api/orders/posOrder`, payment).then((res) => {
+    axios.post(`/api/orders/pos-order`, payment).then((res) => {
       setOrder(res.data)
       setBillOpen(true)
       clearCart();
@@ -375,7 +375,7 @@ const Cart = () => {
                             <td className="text-right">
                               {formatPrice(
                                 item.cart.products.reduce(
-                                  (total, product) => total + product.sellingPrice,
+                                  (total, product) => total + product.currentPrice,
                                   0
                                 )
                               )}

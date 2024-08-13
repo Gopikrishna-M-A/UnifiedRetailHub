@@ -4,6 +4,7 @@ import {
   S3Client,
   ListObjectsCommand,
   PutObjectCommand,
+  DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 
 
@@ -12,7 +13,6 @@ const generateUniqueFileName = (originalFileName) => {
   const timestamp = new Date().toISOString().replace(/[^0-9]/g, ''); // Remove non-numeric characters from timestamp
   const randomString = Math.random().toString(36).substring(2, 8); // Generate a random string
   const fileExtension = originalFileName.split('.').pop(); // Get file extension
-  // Concatenate timestamp, random string, and file extension to create a unique filename
   return `${timestamp}_${randomString}.${fileExtension}`;
 }
 
@@ -48,5 +48,24 @@ export async function POST(request) {
 
   return NextResponse.json(uploadedFiles);
 }
+
+export async function DELETE(request) {
+  const { searchParams } = new URL(request.url);
+  const key = searchParams.get('key');
+
+  if (!key) {
+    return NextResponse.json({ error: "File key is required" }, { status: 400 });
+  }
+
+  try {
+    await s3.send(new DeleteObjectCommand({ Bucket, Key: key }));
+    return NextResponse.json({ message: "File deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    return NextResponse.json({ error: "Failed to delete file" }, { status: 500 });
+  }
+}
+
+
 
 // https://<bucker-name>.s3.<region>.amazonaws.com/<filename>

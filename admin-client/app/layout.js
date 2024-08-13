@@ -2,6 +2,12 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from "../components/theme-provider"
 import Layout from '@/components/Layout'
+import {
+  TooltipProvider,
+} from "@/components/ui/tooltip"
+import AuthProvider from "@/components/AuthProvider"
+import dbConnect from '@/services/db'
+import { Toaster } from "@/components/ui/toaster"
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -11,7 +17,8 @@ export const metadata = {
   description: "Efficiently manage your website with the Admin Dashboard. Keep track of inventory, manage customers, and handle orders seamlessly.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  await dbConnect()
   return (
     <>
       <html lang="en" suppressHydrationWarning>
@@ -25,10 +32,15 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange
           >
+            <AuthProvider>
+            <TooltipProvider>
             <Layout>
             {children}
             </Layout>
+            </TooltipProvider>
+            </AuthProvider>
           </ThemeProvider>
+          <Toaster />
         </body>
       </html>
     </>

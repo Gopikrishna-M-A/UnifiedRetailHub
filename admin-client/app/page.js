@@ -45,7 +45,7 @@ export default function DashboardPage() {
   const [reportDate, setReportDate] = useState();
 
   const fetchOrders = () => {
-    axios.get(`${baseURL}/api/orders`).then((res) => {
+    axios.get(`/api/orders`).then((res) => {
       setOrders(res.data);
       setOrdersCopy(res.data);
       calculateTotalRevenue(res.data);
@@ -58,7 +58,7 @@ export default function DashboardPage() {
   };
 
   const fetchProducts = () => {
-    axios.get(`${baseURL}/api/products`).then((res) => {
+    axios.get(`/api/products`).then((res) => {
       setProducts(res.data);
       const filteredProducts = res.data.filter(
         (product) => product.stockQuantity < product.reorderPoint
@@ -334,7 +334,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
+      {/* <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <div className="flex items-center space-x-2">
           <DatePickerWithPresets setDateChange={setReportDate} />
@@ -342,7 +342,7 @@ export default function DashboardPage() {
             Download
           </Button>
         </div>
-      </div>
+      </div> */}
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -460,7 +460,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4">
               <CardHeader>
                 <CardTitle>Overview</CardTitle>
@@ -469,7 +469,7 @@ export default function DashboardPage() {
                 <Overview data={overview} />
               </CardContent>
             </Card>
-            <Card className="col-span-3">
+            <Card className="col-span-4 md:col-span-3">
               <CardHeader>
                 <CardTitle>Recent Sales</CardTitle>
                 <CardDescription>

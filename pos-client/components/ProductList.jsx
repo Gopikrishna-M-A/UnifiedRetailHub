@@ -22,10 +22,10 @@ const ProductList = () => {
       try {
         setLoading(true);
         if(navigator.onLine){
-        axios.get(`${baseURL}/api/products`).then((res) => {
-          setProducts(res.data);
-          setFilteredProducts(res.data);
-          localStorage.setItem("pos-products", JSON.stringify(res.data));
+        axios.get(`/api/products?limit=-1`).then((res) => {
+          setProducts(res.data.products);
+          setFilteredProducts(res.data.products);
+          localStorage.setItem("pos-products", JSON.stringify(res.data.products));
         });}else{
           const data = JSON.parse(localStorage.getItem("pos-products"));
           setProducts(data);

@@ -7,21 +7,21 @@ const PriceDetails = ({ products, order }) => {
     const calculateTotalPrice = (quantity, price) => quantity * price;
 
     const priceDetails = products?.map((cartItem) => (
-        <div key={cartItem.product._id} className="flex justify-between text-sm text-muted-foreground">
-          <p style={{width:"70%"}} type="secondary">{`${cartItem.quantity} x ${cartItem.product.name}`}</p>
-          <p>{`₹${calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice).toFixed(2)}`}</p>
+        <div key={cartItem?.product?._id} className="flex justify-between text-sm text-muted-foreground">
+          <p style={{width:"70%"}} type="secondary">{`${cartItem?.quantity} x ${cartItem?.product?.name}`}</p>
+          <p>{`₹${calculateTotalPrice(cartItem?.quantity, cartItem?.product?.sellingPrice).toFixed(2)}`}</p>
         </div>
       ));
     const totalAmount = products?.reduce(
-        (total, cartItem) => total + calculateTotalPrice(cartItem.quantity, cartItem.product.sellingPrice),
+        (total, cartItem) => total + calculateTotalPrice(cartItem?.quantity, cartItem?.product?.sellingPrice),
         0
     );
     const couponDiscount = totalAmount > 25 ? 10 : 0 // Assuming a fixed coupon discount for this example
     const deliveryCharges = 0; // Assuming free delivery for this example
     const cartTotal = ((totalAmount + deliveryCharges) - couponDiscount ).toFixed(2);
 
-    const addressObject = order.shippingAddress
-    const addressString = `${addressObject.street}, ${addressObject.city}, ${addressObject.state} ${addressObject.zipCode}, ${addressObject.country}`;
+    const addressObject = order?.shippingAddress
+    const addressString = `${addressObject?.street}, ${addressObject?.city}, ${addressObject?.state} ${addressObject.zipCode}, ${addressObject.country}`;
 
 
 

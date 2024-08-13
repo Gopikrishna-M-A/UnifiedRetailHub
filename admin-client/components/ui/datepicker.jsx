@@ -34,7 +34,7 @@ export function DatePickerWithPresets({setDateChange}) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[240px] justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
@@ -51,7 +51,7 @@ export function DatePickerWithPresets({setDateChange}) {
             setDate(addDays(new Date(), parseInt(value)))
           }
         >
-          <SelectTrigger>
+          <SelectTrigger className='w-full'>
             <SelectValue placeholder="Select" />
           </SelectTrigger>
           <SelectContent position="popper">

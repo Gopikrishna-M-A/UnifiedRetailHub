@@ -5,7 +5,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['ecomm-project-bucket.s3.amazonaws.com'],
+    domains: ['ecomm-project-bucket.s3.amazonaws.com','ecomm-project-bucket.s3.ap-southeast-2.amazonaws.com','lh3.googleusercontent.com'],
   },
 };
 
