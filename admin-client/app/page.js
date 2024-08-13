@@ -58,10 +58,10 @@ export default function DashboardPage() {
   };
 
   const fetchProducts = () => {
-    axios.get(`/api/products`).then((res) => {
-      setProducts(res.data);
-      const filteredProducts = res.data.filter(
-        (product) => product.stockQuantity < product.reorderPoint
+    axios.get(`/api/products?limit=-1`).then((res) => {
+      setProducts(res.data.products);
+      const filteredProducts = res.data.products.filter(
+        (product) => product.totalStock < product.reorderPoint
       );
       setProductsToReorder(filteredProducts);
       console.log("ProductsToReorder", filteredProducts);
@@ -484,23 +484,23 @@ export default function DashboardPage() {
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4 h-full">
-          <Card className="min-h-96">
+          <Card className="min-h-96 ">
             <CardHeader>
               <CardTitle>Low Stock Products</CardTitle>
               <CardDescription>
                 Below are the products that need to be reordered:
               </CardDescription>
             </CardHeader>
-            <CardContent className='flex gap-3 flex-wrap'>
+            <CardContent className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
               {productsToReorder.map((product) => (
-                <div key={product._id} >
-                  <div className="border min-w-80 w-fit rounded px-5 py-2 flex gap-5 relative">
+                <div key={product._id} className="w-full" >
+                  <div className="border w-full rounded px-5 py-2 flex gap-5 relative">
                     <div className="bg-red-600 text-white text-sm px-2 rounded-full flex justify-center gap-2 items-center w-15 h-7 absolute -top-2 -right-2">Low Stock <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="16px" fill="#e8eaed"><path d="M200-80q-33 0-56.5-23.5T120-160v-451q-18-11-29-28.5T80-680v-120q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v120q0 23-11 40.5T840-611v451q0 33-23.5 56.5T760-80H200Zm0-520v440h560v-440H200Zm-40-80h640v-120H160v120Zm200 280h240v-80H360v80Zm120 20Z"/></svg></div>
                     <Image src={product.images[0]} width={80} height={50}/>
                     <div className="flex flex-col">
-                    <div className="text-sm text-muted-foreground mt-3">{product.name}</div>
-                    <div className="text-sm text-muted-foreground ">MRP : <span className="text-black font-bold">{formattedPrice(product.MRP)}</span> </div>
-                    <div className="text-sm text-muted-foreground ">QTY : {product.stockQuantity} remaining</div>
+                    <div className="text-sm text-muted-foreground mt-3 line-clamp-1">{product.name}</div>
+                    <div className="text-sm text-muted-foreground ">MRP : <span className="text-black font-bold">{formattedPrice(product.basePrice)}</span> </div>
+                    <div className="text-sm text-muted-foreground ">QTY : {product.totalStock} remaining</div>
                     </div>
                   </div>
                 </div>

@@ -13,6 +13,6 @@ export default async function middleware(req) {
 
 export const config = {
   matcher: [
-    '/','/orders',
+    '/settings',
   ]
 }

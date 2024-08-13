@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import React, { forwardRef } from 'react';
 import { QRCode } from "antd";
 import html2canvas from "html2canvas"; // Import html2canvas library
 import { saveAs } from "file-saver"; // Import file-saver library
@@ -7,26 +7,26 @@ import { saveAs } from "file-saver"; // Import file-saver library
 const UpiId = process.env.NEXT_PUBLIC_UPI_ID;
 const UpiName = process.env.NEXT_PUBLIC_UPI_NAME;
 
-const Bill = ({ order }) => {
+const Bill = ({ order },ref) => {
 
   const billRef = useRef(null);
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    const downloadBillAsImage = () => {
-      if (!billRef.current) return;
+  //   const downloadBillAsImage = () => {
+  //     if (!billRef.current) return;
     
-      html2canvas(billRef.current).then((canvas) => {
-        // Convert the canvas to a Blob
-        canvas.toBlob((blob) => {
-          saveAs(blob, `bill ${order.orderNumber}.png`);
-        });
-      });
-    };
+  //     html2canvas(billRef.current).then((canvas) => {
+  //       // Convert the canvas to a Blob
+  //       canvas.toBlob((blob) => {
+  //         saveAs(blob, `bill ${order.orderNumber}.png`);
+  //       });
+  //     });
+  //   };
     
-    downloadBillAsImage();
+  //   downloadBillAsImage();
   
-  }, []);
+  // }, []);
 
 
   const getTime = () => {
@@ -42,7 +42,7 @@ const Bill = ({ order }) => {
   };
 
   return (
-    <div className="supermarket-bill"  ref={billRef}>
+    <div className="supermarket-bill"  ref={ref}>
       {/* Store Information */}
       <div className="store-info">
         <h3>Maliakkal Stores</h3>
@@ -54,9 +54,9 @@ const Bill = ({ order }) => {
 
       {/* Transaction Information */}
       <div className="transaction-info">
-        <p>{order.customer.name}</p>
-        <p>Ph: {order.customer.phone}</p>
-        <p>Order {order.orderNumber}</p>
+        <p>{order?.customer?.name}</p>
+        <p>Ph: {order?.customer?.phone}</p>
+        <p>Order {order?.orderNumber}</p>
         <div className="flex w-full justify-between">
         <p>Date: {new Date().toISOString().split("T")[0].split("-").reverse().join("-")}</p>
         <p>Time: {getTime()}</p>
@@ -77,8 +77,8 @@ const Bill = ({ order }) => {
         <tbody className="invoice-body">
           {order?.products?.map((row, index) => (
             <tr key={index}>
-              <td>{row.product.name}</td>
-              <td>{row.price.toFixed(2)}</td>
+              <td>{row.product?.name}</td>
+              <td>{row?.price?.toFixed(2)}</td>
               <td style={{ textAlign: "center" }}>{row.quantity}</td>
               <td style={{ textAlign: "right" }}>
                 {(row.price * row.quantity).toFixed(2)}

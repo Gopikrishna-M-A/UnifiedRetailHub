@@ -42,6 +42,7 @@ import {
 import { useSession } from "next-auth/react";
 import { ModeToggle } from "./mode-toggle"
 import { usePathname } from "next/navigation"
+import { signOut } from "next-auth/react"
 
 export default function Layout({ children }) {
   const { data:session } = useSession()
@@ -312,7 +313,7 @@ export default function Layout({ children }) {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={signOut}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <ModeToggle />

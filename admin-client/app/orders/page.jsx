@@ -85,7 +85,7 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardFooter>
-              <Button>Create New Order</Button>
+              <Button disabled>Create New Order</Button>
             </CardFooter>
           </Card>
           <Card x-chunk='dashboard-05-chunk-1'>

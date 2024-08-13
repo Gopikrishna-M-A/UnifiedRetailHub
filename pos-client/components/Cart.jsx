@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import { useCart } from "../contexts/cartContext";
 import CartProduct from "./CartProduct";
 import { Button } from "@/components/ui/button";
@@ -58,11 +58,37 @@ const Cart = () => {
   const [newUser,setNewUser] = useState(false)
   const [order,setOrder] = useState()
   const [print,setPrint] = useState(false)
+  const billRef = useRef(null);
 
   const [name, setName] = useState(null);
   const [phone, setPhone] = useState(null);
 
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+  const handlePrint = () => {
+    if (!billRef.current) return;
+    
+    html2canvas(billRef.current).then((canvas) => {
+      // Convert the canvas to a Blob
+      canvas.toBlob((blob) => {
+        // Use file-saver to save the image
+        saveAs(blob, `bill_${order.orderNumber}.png`);
+      });
+
+      // Open a new window with the image for printing
+      const imgData = canvas.toDataURL('image/png');
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Bill</title>
+          </head>
+          <body style="margin:0;padding:0;">
+            <img src="${imgData}" onload="window.print();window.close()" />
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    });
+  };
 
 
   useEffect(() => {
@@ -173,7 +199,7 @@ const Cart = () => {
 
     console.log("email",formObject.email,"name",formObject.name,"phone",formObject.phone,"addr",shippingAddress);
     if (newUser) {
-      axios.post(`${baseURL}/api/user`, {
+      axios.post(`/api/customers`, {
         email: formObject.email,
         name: formObject.name,
         phone: formObject.phone,
@@ -223,28 +249,37 @@ const Cart = () => {
   }
 
 
-  const handleTender = (method) => {
-    const payment = {
-      customer: cart.customer._id,
-      products:convertProducts(products),
-      totalAmount: total,
-      shippingAddress: cart.customer.address,
-      paymentStatus: "Paid",
-      method,
-      DeliverType:"Delivery",
-    };
-    console.log("payment",cart);
-    axios.post(`/api/orders/pos-order`, payment).then((res) => {
-      setOrder(res.data)
-      setBillOpen(true)
+  const handleTender = async (method) => {
+    try {
+      const payment = {
+        customer: cart.customer._id,
+        products: convertProducts(products),
+        totalAmount: total,
+        shippingAddress: cart.customer.address,
+        paymentStatus: "Paid",
+        method,
+        DeliverType: "Delivery",
+      };
+  
+      const res = await axios.post(`/api/orders/pos-order`, payment);
+      console.log('data from pos', res.data);
+      
+      setOrder(res.data);
+      setBillOpen(true);
       clearCart();
       setName(null);
       setPhone(null);
+      
       toast.success("Tender successfully processed.", {
         position: "top-right",
       });
-    });
-}
+    } catch (error) {
+      console.error('Error processing tender:', error);
+      toast.error("Failed to process tender. Please try again.", {
+        position: "top-right",
+      });
+    }
+  };
 
   return (
     <div className=" w-[38%] h-screen-lg  border- overflow-hidden relative text-muted-foreground">
@@ -408,13 +443,10 @@ const Cart = () => {
               <DialogHeader>
                 <DialogDescription>
                   <div className=" w-full flex justify-center items-center ">
-                      <Bill order={order} print={print}/>
+                      <Bill order={order} ref={billRef}/>
                   </div>
                     <DialogClose asChild className="">
-                      <Button className="mt-5 float-right" onClick={()=>{
-                        setBillOpen(false)
-                        setPrint(true)
-                        }}>
+                      <Button className="mt-5 float-right" onClick={handlePrint}>
                         Print
                       </Button>
                     </DialogClose>

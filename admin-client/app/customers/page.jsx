@@ -45,8 +45,8 @@ import {
 export default function Dashboard() {
   const [customers, setCustomers] = useState([])
   const [customer,setCustomer] = useState('')
-  const [orders,setOrders] = useState([])
 
+  const [orders,setOrders] = useState([])
   const [totalSpend, setTotalSpend] = useState(0);
   const [avgOrderValue, setAvgOrderValue] = useState(0);
   const [orderCount, setOrderCount] = useState(0);
@@ -209,24 +209,41 @@ export default function Dashboard() {
             </CardFooter>
           </Card>
 
-          <Card className="grid col-span-2">
-      <CardHeader>
-        <div className="flex items-center space-x-4">
-          <Avatar className="w-16 h-16">
+          <Card className={`grid col-span-2 ${!customer && 'animate-pulse'}`}>
+  <CardHeader>
+    <div className="flex items-center space-x-4">
+      <Avatar className="w-16 h-16 bg-gray-200">
+        {customer ? (
+          <>
             <AvatarImage src={customer?.image} alt={customer?.name} />
             <AvatarFallback>{customer?.name?.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
+          </>
+        ) : (
+          <div className="w-full h-full bg-gray-300"></div>
+        )}
+      </Avatar>
+      <div>
+        {customer ? (
+          <>
             <CardTitle>{customer?.name}</CardTitle>
             <CardDescription>{customer?.email}</CardDescription>
+          </>
+        ) : (
+          <div className="space-y-2">
+            <div className="w-32 h-4 bg-gray-300 rounded"></div>
+            <div className="w-48 h-4 bg-gray-300 rounded"></div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <section>
-            <h3 className="font-semibold mb-2">Financial Overview</h3>
-            <div className="grid grid-cols-2 gap-2">
+        )}
+      </div>
+    </div>
+  </CardHeader>
+  <CardContent>
+    <div className="space-y-4">
+      <section>
+        <h3 className="font-semibold mb-2">Financial Overview</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {customer ? (
+            <>
               <div>
                 <p className="text-sm text-gray-500">Total Spend</p>
                 <p className="font-medium">{formatToINR(totalSpend?.toFixed(2))}</p>
@@ -243,12 +260,23 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-500">Last Purchase</p>
                 <p className="font-medium">{lastPurchaseDate ? formatDateAndTime(lastPurchaseDate) : 'N/A'}</p>
               </div>
-            </div>
-          </section>
-          
-          <section>
-            <h3 className="font-semibold mb-2">Customer Info</h3>
-            <div className="space-y-2">
+            </>
+          ) : (
+            <>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+            </>
+          )}
+        </div>
+      </section>
+
+      <section>
+        <h3 className="font-semibold mb-2">Customer Info</h3>
+        <div className="space-y-2">
+          {customer ? (
+            <>
               <p className="text-sm">
                 <span className="text-gray-500">Phone:</span> {customer?.phone || 'N/A'}
               </p>
@@ -256,33 +284,53 @@ export default function Dashboard() {
                 <span className="text-gray-500">Address:</span> {customer?.address ? `${customer?.address?.street}, ${customer?.address?.city}, ${customer?.address?.state} ${customer?.address?.zipCode}, ${customer?.address?.country}` : 'N/A'}
               </p>
               <p className="text-sm">
-                <span className="text-gray-500">Customer Since:</span> { customer?.createdAt ? formatDate(customer.createdAt) : 'N/A'}
+                <span className="text-gray-500">Customer Since:</span> {customer?.createdAt ? formatDate(customer.createdAt) : 'N/A'}
               </p>
-              {/* <div>
-                <span className="text-sm text-gray-500">Loyalty Tier:</span>
-                <Badge className="ml-2" variant="secondary">{loyaltyTier}</Badge>
-              </div> */}
-            </div>
-          </section>
-          
-          <section>
-            <h3 className="font-semibold mb-2">Recent Orders</h3>
-            <ul className="space-y-2">
-              {recentOrders?.map((order, index) => (
-                <li key={index} className="text-sm">
-                  <span className="text-gray-500">{convertDateFormat(order?.date)}:</span> {formatToINR(order?.amount?.toFixed(2))}
-                </li>
-              ))}
-            </ul>
-          </section>
-          
-          <section>
-            <h3 className="font-semibold mb-2">Notes</h3>
-            <p className="text-sm">{customer?.settings?.find(s => s.key === 'notes')?.value || 'No notes available.'}</p>
-          </section>
+            </>
+          ) : (
+            <>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+              <div className="w-full h-4 bg-gray-300 rounded"></div>
+            </>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </section>
+
+      <section>
+        <h3 className="font-semibold mb-2">Recent Orders</h3>
+        <ul className="space-y-2">
+          {customer ? (
+            recentOrders?.map((order, index) => (
+              <li key={index} className="text-sm">
+                <span className="text-gray-500">{convertDateFormat(order?.date)}:</span> {formatToINR(order?.amount?.toFixed(2))}
+              </li>
+            ))
+          ) : (
+            Array(3)
+              .fill('')
+              .map((_, index) => (
+                <li key={index} className="w-full h-4 bg-gray-300 rounded"></li>
+              ))
+          )}
+        </ul>
+      </section>
+
+      <section>
+        <h3 className="font-semibold mb-2">Notes</h3>
+        {customer ? (
+          <p className="text-sm">{customer?.settings?.find(s => s.key === 'notes')?.value || 'No notes available.'}</p>
+        ) : (
+          <div className="w-full h-4 bg-gray-300 rounded"></div>
+        )}
+      </section>
+    </div>
+  </CardContent>
+  <CardFooter>
+   {!customer &&  <p className="text-destructive">click any customer to see their stats</p>}
+  </CardFooter>
+</Card>
+
 
           </div>
         </TabsContent>
