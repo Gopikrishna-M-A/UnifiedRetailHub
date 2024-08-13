@@ -8,7 +8,7 @@ export default async function middleware(req) {
   // if (!session) {
   //   return NextResponse.redirect(new URL(`/api/auth/signin?callbackUrl=${path}`, req.url));
   // }
-  // return NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
