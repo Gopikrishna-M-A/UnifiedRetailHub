@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server"
 import mongoose from 'mongoose'
 import User from "@/services/models/User"
+import dbConnect from "@/services/db"
 
 export async function GET(request) {
+  await dbConnect()
   try {
     const customers = await User.find()
     return NextResponse.json(customers)

@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server"
 import Order from "@/services/models/Order"
 import mongoose from 'mongoose'
+import dbConnect from "@/services/db"
 
 export async function GET(request) {
+  await dbConnect()
   const { searchParams } = new URL(request.url)
   const id = searchParams.get("id")
   const customerId = searchParams.get("customerId")

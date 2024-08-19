@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server"
 import mongoose from "mongoose"
 import Product from "@/services/models/Product"
+import dbConnect from "@/services/db"
 
 
 export async function GET(request) {
+  await dbConnect()
   const { searchParams } = new URL(request.url)
   const id = searchParams.get("id")
   const page = parseInt(searchParams.get("page")) || 1
