@@ -30,7 +30,7 @@ export async function POST(request) {
 async function generateReceipt(order) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
-      size: [230, 500],
+    //   size: [230, 500],
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
     })
 
