@@ -8,7 +8,7 @@ export async function POST(request) {
     const {order} = await request.json()
     console.log("order",order);
 
-    const height = 50 * order.products.length + 300
+    const height = 50 * order.products.length + 400
     
     const pdfBuffer = await generateReceipt(order,height)
 
