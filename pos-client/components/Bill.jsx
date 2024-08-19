@@ -1,34 +1,11 @@
 "use client";
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { QRCode } from "antd";
-import html2canvas from "html2canvas"; // Import html2canvas library
-import { saveAs } from "file-saver"; // Import file-saver library
 
 const UpiId = process.env.NEXT_PUBLIC_UPI_ID;
 const UpiName = process.env.NEXT_PUBLIC_UPI_NAME;
-
-const Bill = ({ order },ref) => {
-
-  const billRef = useRef(null);
-
-  // useEffect(() => {
-    
-  //   const downloadBillAsImage = () => {
-  //     if (!billRef.current) return;
-    
-  //     html2canvas(billRef.current).then((canvas) => {
-  //       // Convert the canvas to a Blob
-  //       canvas.toBlob((blob) => {
-  //         saveAs(blob, `bill ${order.orderNumber}.png`);
-  //       });
-  //     });
-  //   };
-    
-  //   downloadBillAsImage();
-  
-  // }, []);
-
-
+const Bill = forwardRef(({ order }, ref) => {
   const getTime = () => {
     const currentDate = new Date();
     let hours = currentDate.getHours();
@@ -37,12 +14,11 @@ const Bill = ({ order },ref) => {
     hours = hours % 12;
     hours = hours ? hours : 12; // Handle midnight (0 hours)
     minutes = minutes < 10 ? "0" + minutes : minutes; // Add leading zero if minutes < 10
-    const currentTime = hours + ":" + minutes + " " + ampm;
-    return currentTime;
+    return `${hours}:${minutes} ${ampm}`;
   };
 
   return (
-    <div className="supermarket-bill"  ref={ref}>
+    <div className="supermarket-bill" ref={ref}>
       {/* Store Information */}
       <div className="store-info">
         <h3>Maliakkal Stores</h3>
@@ -58,8 +34,8 @@ const Bill = ({ order },ref) => {
         <p>Ph: {order?.customer?.phone}</p>
         <p>Order {order?.orderNumber}</p>
         <div className="flex w-full justify-between">
-        <p>Date: {new Date().toISOString().split("T")[0].split("-").reverse().join("-")}</p>
-        <p>Time: {getTime()}</p>
+          <p>Date: {new Date().toISOString().split("T")[0].split("-").reverse().join("-")}</p>
+          <p>Time: {getTime()}</p>
         </div>
       </div>
 
@@ -103,20 +79,13 @@ const Bill = ({ order },ref) => {
       </div>
       <div className="flex flex-col w-full justify-center items-center gap-2">
         <QRCode
-          value={
-            `upi://pay?pa=${UpiId}&pn=${UpiName}&am=${order?.totalAmount}&cu=INR` ||
-            "-"
-          }
+          value={`upi://pay?pa=${UpiId}&pn=${UpiName}&am=${order?.totalAmount}&cu=INR` || "-"}
         />
-          <p className="text-center mb-2">Scan to Pay</p>
+        <p className="text-center mb-2">Scan to Pay</p>
       </div>
     </div>
   );
-};
+});
 
+Bill.displayName = 'Bill';
 export default Bill;
-
-
-
-
-

@@ -1,33 +1,10 @@
 "use client";
-import { useEffect, useRef } from "react";
 import { QRCode } from "antd";
-import html2canvas from "html2canvas"; // Import html2canvas library
-import { saveAs } from "file-saver"; // Import file-saver library
 
 const UpiId = process.env.NEXT_PUBLIC_UPI_ID;
 const UpiName = process.env.NEXT_PUBLIC_UPI_NAME;
 
 const Bill = ({ order }) => {
-
-  const billRef = useRef(null);
-
-  // useEffect(() => {
-    
-  //   const downloadBillAsImage = () => {
-  //     if (!billRef.current) return;
-    
-  //     html2canvas(billRef.current).then((canvas) => {
-  //       // Convert the canvas to a Blob
-  //       canvas.toBlob((blob) => {
-  //         saveAs(blob, `bill ${order.orderNumber}.png`);
-  //       });
-  //     });
-  //   };
-    
-  //   downloadBillAsImage();
-  
-  // }, []);
-
 
   const getTime = () => {
     const currentDate = new Date();
@@ -42,7 +19,7 @@ const Bill = ({ order }) => {
   };
 
   return (
-    <div className="supermarket-bill"  ref={billRef}>
+    <div className="supermarket-bill" >
       {/* Store Information */}
       <div className="store-info">
         <h3>Maliakkal Stores</h3>
