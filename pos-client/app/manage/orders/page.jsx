@@ -58,11 +58,6 @@ export default function DataTableDemo() {
     setSelectedOrder(order);
   };
 
-  const items = [
-    { name: 'Apples', mrp:8.00, price: 3.99, quantity: 2 },
-    { name: 'Bread', mrp:4.00, price: 2.50, quantity: 1 },
-    { name: 'Milk', mrp:4.00, price: 1.99, quantity: 1 },
-];
 
 const handlePrint = useCallback(async (order) => {
   console.log("selected",order);

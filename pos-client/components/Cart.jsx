@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
 import { useCart } from "../contexts/cartContext"
 import CartProduct from "./CartProduct"
 import { Button } from "@/components/ui/button"
@@ -66,32 +66,53 @@ const Cart = () => {
   const [name, setName] = useState(null)
   const [phone, setPhone] = useState(null)
 
-  const handlePrint = () => {
-    if (!billRef.current) return
-
-    html2canvas(billRef.current).then((canvas) => {
-      // Convert the canvas to a Blob
-      canvas.toBlob((blob) => {
-        // Use file-saver to save the image
-        saveAs(blob, `bill_${order.orderNumber}.png`)
-      })
-
-      // Open a new window with the image for printing
-      const imgData = canvas.toDataURL("image/png")
-      const printWindow = window.open("", "_blank")
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Print Bill</title>
-          </head>
-          <body style="margin:0;padding:0;">
-            <img src="${imgData}" onload="window.print();window.close()" />
-          </body>
-        </html>
-      `)
-      printWindow.document.close()
-    })
-  }
+  const handlePrint = useCallback(async (order) => {
+    console.log("selected",order);
+    
+    try {
+      // Fetch the PDF from your API endpoint
+      const response = await fetch('/api/pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // You can pass any necessary data in the body
+        body: JSON.stringify({order}),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch PDF');
+      }
+  
+      // Get the PDF as a Blob
+      const pdfBlob = await response.blob();
+  
+      // Create a Blob URL
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+      // Create a hidden iframe
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = pdfUrl;
+      document.body.appendChild(iframe);
+  
+      // Wait for the iframe to load
+      iframe.onload = () => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      };
+  
+      // Clean up
+      iframe.onafterprint = () => {
+        document.body.removeChild(iframe);
+        URL.revokeObjectURL(pdfUrl);
+      };
+    } catch (error) {
+      console.error('Error printing PDF:', error);
+      alert('Failed to print receipt');
+    }
+  }, []);
+  
 
   useEffect(() => {
     updateCart()
@@ -467,7 +488,7 @@ const Cart = () => {
                     <Bill order={order} ref={billRef} />
                   </div>
                   <DialogClose asChild className=''>
-                    <Button className='mt-5 float-right' onClick={handlePrint}>
+                    <Button className='mt-5 float-right' onClick={()=>handlePrint(order)}>
                       Print
                     </Button>
                   </DialogClose>
