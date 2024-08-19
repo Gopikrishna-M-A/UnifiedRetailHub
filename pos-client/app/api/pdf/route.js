@@ -7,8 +7,10 @@ export async function POST(request) {
   try {
     const {order} = await request.json()
     console.log("order",order);
+
+    const height = 50 * order.products.length + 300
     
-    const pdfBuffer = await generateReceipt(order)
+    const pdfBuffer = await generateReceipt(order,height)
 
     return new NextResponse(pdfBuffer, {
       status: 200,
@@ -27,10 +29,11 @@ export async function POST(request) {
 }
 
 
-async function generateReceipt(order) {
+async function generateReceipt(order,height) {
+
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
-      size: [230,5000],
+      size: [230,height],
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
     })
 
