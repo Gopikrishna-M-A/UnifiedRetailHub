@@ -30,7 +30,7 @@ export async function POST(request) {
 async function generateReceipt(order) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
-    //   size: [230, 500],
+      size: [230, 200000],
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
     })
 
@@ -103,7 +103,6 @@ async function generateReceipt(order) {
       const itemNameHeight = doc.heightOfString(item.product.name, { width: itemWidth })
       doc.text(item.product.name, itemX, y, { width: itemWidth, align: 'left' })
 
-    //   const adjustedY = y + Math.max(0, itemNameHeight - doc.currentLineHeight())
 
       doc.text(`${item.product.basePrice.toFixed(2)}`, mrpX, y, {
         width: 40,
@@ -150,10 +149,12 @@ async function generateReceipt(order) {
         doc.image(url, (230 - 100) / 2, doc.y, { fit: [100, 100] }) // Centered QR code
         doc.moveDown(-0.4)
         doc.fontSize(9).text("Scan to Pay", { align: "center" })
+        const pageHeight = doc.y + 20 
+        doc.page.height = pageHeight
         doc.end()
       }
     })
-
+ 
     stream.on("finish", () => {
       const pdfBlob = stream.toBlob("application/pdf")
       resolve(pdfBlob)
