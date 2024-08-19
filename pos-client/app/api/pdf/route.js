@@ -30,13 +30,12 @@ export async function POST(request) {
 async function generateReceipt(order) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({
-      size: [230, 200000],
+      size: [230,5000],
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
     })
 
     const stream = doc.pipe(blobStream())
 
-    // doc.addPage({ margin: 10 })
 
 
     // Header
@@ -94,6 +93,9 @@ async function generateReceipt(order) {
 
     // Items
     let total = 0
+    const itemStartY = doc.y
+    let maxY = itemStartY
+      
     order.products.forEach((item) => {
       const itemTotal = item.price * item.quantity
       const y = doc.y
@@ -120,11 +122,12 @@ async function generateReceipt(order) {
       })
 
       total += itemTotal
-      doc.moveDown(Math.max(itemNameHeight / doc.currentLineHeight(), 1))
+      maxY = Math.max(maxY, y + itemNameHeight)
+      doc.y = maxY
+      doc.moveDown(0.5)
     })
 
     // Total
-    doc.moveDown(0.5)
     doc.moveTo(itemX, doc.y).lineTo(220, doc.y).stroke()
     doc.moveDown(0.5)
     doc.fontSize(20).text("TOTAL:", itemX, doc.y+12 )
